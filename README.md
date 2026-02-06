@@ -16,7 +16,7 @@ Springdoc OpenAPI (Swagger)
 
 ## Struktur
 ```
-de.phbe.auth_jwt
+de.phbe.authjwt
 │
 ├── user                          ← Feature / Bounded Context
 │   ├── api                        ← Controller / DTOs / Request-Response

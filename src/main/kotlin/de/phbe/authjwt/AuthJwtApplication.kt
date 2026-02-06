@@ -1,4 +1,4 @@
-package de.phbe.auth_jwt
+package de.phbe.authjwt
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

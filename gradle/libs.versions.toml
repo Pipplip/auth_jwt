@@ -1,0 +1,53 @@
+[versions]
+kotlin = "2.2.21"
+spring-boot = "4.0.2"
+spring-dependency-management = "1.1.7"
+kotest = "6.0.5"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.10.0"
+ktlint = "13.1.0"
+kover = "0.9.3"
+jjwt = "0.11.5"
+mysql = "8.1.0"
+flyway = "12.0.0"
+springdoc = "2.3.0"
+mockk = "1.14.6"
+kotlin-logging = "7.0.13"
+logstash = "8.1"
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+kotest = { id = "io.kotest", version.ref = "kotest" }
+
+[libraries]
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-webmvc", version.ref = "spring-boot" }
+spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+mysql-connector = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
+springdoc-openapi-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+
+kotlin-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version = "7.0.13" }
+logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version = "8.1" }
+kotlinx-coroutines-slf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version = "1.10.2" }
+kotest-runner-junit5-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+kotest-extensions-junitxml = { module = "io.kotest:kotest-extensions-junitxml", version.ref = "kotest" }
+mockk = { module = "io.mockk:mockk", version = "1.14.6" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }

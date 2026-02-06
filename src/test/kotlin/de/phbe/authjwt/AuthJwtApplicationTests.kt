@@ -1,13 +1,9 @@
-package de.phbe.auth_jwt
+package de.phbe.authjwt
 
-import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 class AuthJwtApplicationTests {
-
-    @Test
     fun contextLoads() {
     }
-
 }
