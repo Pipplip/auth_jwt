@@ -1,6 +1,5 @@
 package de.phbe.authjwt.user.adapter.persistence
 
-import de.phbe.authjwt.user.application.port.out.SaveUserPort
 import de.phbe.authjwt.user.domain.model.User
 import de.phbe.authjwt.user.domain.model.UserId
 import org.springframework.data.jpa.repository.JpaRepository

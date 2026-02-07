@@ -1,8 +1,8 @@
-package de.phbe.authjwt.user.adapter.web
+package de.phbe.authjwt.user.web
 
 import de.phbe.authjwt.user.application.port.`in`.RegisterUserUseCase
-import de.phbe.authjwt.user.adapter.web.dto.RegisterRequest
-import de.phbe.authjwt.user.adapter.web.dto.UserResponse
+import de.phbe.authjwt.user.web.dto.RegisterRequest
+import de.phbe.authjwt.user.web.dto.UserResponse
 import org.springframework.web.bind.annotation.*
 
 @RestController

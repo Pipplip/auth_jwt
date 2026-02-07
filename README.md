@@ -15,10 +15,7 @@ Springdoc OpenAPI (Swagger)
 
 ## Begriffe
 
-**Domäne**: Beschreibt ein Problem, welches man lösen will. Also Regeln, Prozesse der realen Welt. z.B. 
-1. User / Auth = Registrierung, Login, Passwort-Hashing, Token-Generierung, Rollen
-2. Orders = Bestellung aufgeben, Bestellung stornieren, Bestellungshistorie
-3. Rechnungen = Rechnung erstellen, Rechnung bezahlen, Rechnung stornieren, Mahnungen
+**Domäne**: Beschreibt ein Problem, welches man lösen will. Also Regeln, Prozesse der realen Welt. z.B. Webshop
 
 Die Domäne enthält keine technischen Details, sondern beschreibt nur die Geschäftslogik und Regeln. Sie ist unabhängig von Frameworks, Datenbanken oder anderen Technologien.
 
@@ -34,6 +31,48 @@ Domain layer innerhalb eines Bounded Contexts = die Regeln und Prozesse innerhal
 **Port**: Ein Interface, das die Kommunikation zwischen der Domäne und der Außenwelt definiert
 
 ## Struktur
+```
+de.phbe.authjwt
+├── user/
+│   ├── domain/
+│   │   ├── exception/
+│   │   │   └── UserAlreadyExistsException.kt
+│   │   ├── model/
+│   │   │   ├── User.kt
+│   │   │   └── UserId.kt
+│   │   └── repository/  ← Outbound Port
+│   │       └── UserRepository.kt
+│   ├── adapter/
+│   │   ├── persistence/
+│   │   │   ├── SpringUserRepository.kt
+│   │   │   ├── UserJpaEntity.kt
+│   │   │   └── UserMapper.kt
+│   │   └── security/
+│   │       ├── BCryptPasswordHasher.kt
+│   │       └── JwtTokenProvider.kt
+│   ├── service/ ← Application / Use Cases
+│   │   └── UserService.kt
+│   ├── security/
+│   │   └── PasswordHasher.kt
+│   └── web/  ← Inbound Adapter
+│       ├── dto/
+│       │   ├── LoginRequest.kt
+│       │   ├── JwtResponse.kt
+│       │   ├── RegisterRequest.kt
+│       │   └── UserResponse.kt
+│       ├── AuthController.kt
+│       └── UserController.kt
+├── security/
+│   ├── JwtAuthenticationFilter.kt
+│   └── SecurityConfig.kt
+├── exception/
+│   └── GlobalExceptionHandler.kt
+├── config/
+│   └── OpenApiConfig.kt
+└── AuthJwtApplication.kt
+
+```
+OLD
 ```
 de.phbe.authjwt
 │
