@@ -29,6 +29,67 @@ Bounded Context = ein Land auf der Karte (z.B. User Context: Registrierung, Logi
 Domain layer innerhalb eines Bounded Contexts = die Regeln und Prozesse innerhalb dieses Landes (z.B. Passwort-Hashing, Token-Generierung) <br>
 
 **Port**: Ein Interface, das die Kommunikation zwischen der Domäne und der Außenwelt definiert
+Ein Port ist eine Schnittstelle, die sagt „Das brauche ich – aber mir ist egal, wie du es machst.
+
+Bsp: Stell dir ein Haus vor. Die Logik lebt im Haus, die Außenwelt ist Strom, Wasser Internet.
+Dein Haus sagt: Ich brauch Strom.
+Dann ist der Stromanschluss der Port und das Kraftwerk der Adapter.
+
+Port (innen) z.B. interface PasswordHasher: Ich brauche jemanden, der Passwörter hasht.
+Adapter (aussen): class BCryptPasswordHasher : PasswordHasher
+
+Macht alles flexibler und austauschbar und besser testbar.
+
+Arten von Ports:
+1. Inbound Ports: Was darf man mit mir tun? (login, register User ...) Meist Service Interfaces
+2. Outbound Ports: Was brauche ich von außen? (Token erzeugen, Daten speichern, Passwort prüfen)
+
+```
+           ┌─────────────────────────┐
+           │        Controller       │  ← Inbound Adapter
+           │-------------------------│
+           │ AuthController          │
+           │ UserController          │
+           └─────────┬──────────────┘
+                     │ ruft
+                     ▼
+           ┌─────────────────────────┐
+           │       Service /         │  ← Use Cases / Application Layer
+           │    UserService          │
+           └─────────┬──────────────┘
+                     │ nutzt
+          ┌──────────┴───────────┐
+          │                      │
+          ▼                      ▼
+┌─────────────────┐     ┌─────────────────┐
+│   UserRepository │     │ PasswordHasher  │  ← Outbound Ports (Interfaces)
+│   (Interface)    │     │ (Interface)     │
+└─────────┬────────┘     └─────────┬───────┘
+          │                        │ implementiert
+          ▼                        ▼
+┌─────────────────┐     ┌─────────────────┐
+│SpringUserRepo   │     │ BCryptPassword  │  ← Adapter / Implementierungen
+│ (JPA / DB)      │     │ Hasher          │
+└─────────────────┘     └─────────────────┘
+
+                ▲
+                │
+           Domain Layer
+        ┌─────────────┐
+        │ User.kt     │
+        │ UserId.kt   │
+        │ Exceptions  │
+        └─────────────┘
+
+```
+
+Controller = Schnittstelle außen
+
+Service = Use Case / Logik-Knoten
+
+Ports = Interface für Abhängigkeiten nach außen
+
+Adapter = Implementierung dieser Ports
 
 ## Struktur
 ```
@@ -53,7 +114,7 @@ de.phbe.authjwt
 │   ├── service/ ← Application / Use Cases
 │   │   └── UserService.kt
 │   ├── security/
-│   │   └── PasswordHasher.kt
+│   │   └── PasswordHasher.kt ← Outbound Port
 │   └── web/  ← Inbound Adapter
 │       ├── dto/
 │       │   ├── LoginRequest.kt
@@ -125,45 +186,3 @@ de.phbe.authjwt
 │
 └── AuthJwtApplication.kt
 ```
-
-
-OLD
-```
-de.phbe.authjwt
-│
-├── user                          ← Feature / Bounded Context
-│   ├── api                        ← Controller / DTOs / Request-Response
-│   │   ├── UserController.kt
-│   │   ├── AuthController.kt
-│   │   ├── dto
-│   │   │   ├── UserRequest.kt
-│   │   │   └── UserResponse.kt
-│   │   └── auth
-│   │       └── LoginRequest.kt
-│   │
-│   ├── service                    ← Application Layer / Use Cases
-│   │   ├── UserService.kt
-│   │   └── AuthService.kt
-│   │
-│   ├── persistence                ← Infrastruktur / DB
-│   │   ├── UserEntity.kt
-│   │   └── UserRepository.kt     ← Spring Data JPA
-│   │
-│   └── util                       ← Feature-spezifische Helfer
-│       └── PasswordHasher.kt
-│
-├── security
-│   ├── SecurityConfig.kt
-│   ├── JwtTokenProvider.kt
-│   └── JwtAuthenticationFilter.kt
-│
-├── config
-│   └── OpenApiConfig.kt           ← Swagger/OpenAPI Config
-│
-├── exception
-│   ├── GlobalExceptionHandler.kt
-│   └── DomainException.kt
-│
-└── AuhJwtApplication.kt
-```
-

@@ -1,12 +1,14 @@
 package de.phbe.authjwt.user.adapter.security
 
+import de.phbe.authjwt.user.security.PasswordHasher
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component
-class BCryptPasswordHasher {
+class BCryptPasswordHasher : PasswordHasher {
     private val encoder = BCryptPasswordEncoder()
 
-    fun hash(password: String) = encoder.encode(password)
-    fun matches(raw: String, hash: String) = encoder.matches(raw, hash)
+    override fun hash(rawPassword: String) = encoder.encode(rawPassword)
+    override fun matches(rawPassword: String, hashedPassword: String) =
+        encoder.matches(rawPassword, hashedPassword)
 }
