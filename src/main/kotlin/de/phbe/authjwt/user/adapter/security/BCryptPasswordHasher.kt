@@ -8,7 +8,15 @@ import org.springframework.stereotype.Component
 class BCryptPasswordHasher : PasswordHasher {
     private val encoder = BCryptPasswordEncoder()
 
-    override fun hash(rawPassword: String) = encoder.encode(rawPassword)
+    override fun hash(rawPassword: String): String {
+        require(rawPassword.isNotBlank()) {
+            "Raw password must not be blank"
+        }
+
+        return encoder.encode(rawPassword)
+            ?: throw IllegalStateException("BCrypt returned null")
+    }
+
     override fun matches(rawPassword: String, hashedPassword: String) =
         encoder.matches(rawPassword, hashedPassword)
 }

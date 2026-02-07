@@ -1,9 +1,10 @@
-package de.phbe.authjwt.user.adapter.security
+package de.phbe.authjwt.security
 
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Date
 
 @Component
 class JwtTokenProvider {
@@ -23,5 +24,18 @@ class JwtTokenProvider {
             .setExpiration(validity)
             .signWith(SignatureAlgorithm.HS256, secret)
             .compact()
+    }
+
+    fun getUserId(token: String): String {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).body.subject
+    }
+
+    fun validateToken(token: String): Boolean {
+        return try {
+            val claims: Claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).body
+            !claims.expiration.before(Date())
+        } catch (e: Exception) {
+            false
+        }
     }
 }

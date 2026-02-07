@@ -107,10 +107,10 @@ de.phbe.authjwt
 │   │   ├── persistence/
 │   │   │   ├── SpringUserRepository.kt
 │   │   │   ├── UserJpaEntity.kt
+│   │   │   ├── JpaUserRepository.kt
 │   │   │   └── UserMapper.kt
 │   │   └── security/
-│   │       ├── BCryptPasswordHasher.kt
-│   │       └── JwtTokenProvider.kt
+│   │       └── BCryptPasswordHasher.kt
 │   ├── service/ ← Application / Use Cases
 │   │   └── UserService.kt
 │   ├── security/
@@ -125,7 +125,8 @@ de.phbe.authjwt
 │       └── UserController.kt
 ├── security/
 │   ├── JwtAuthenticationFilter.kt
-│   └── SecurityConfig.kt
+│   ├── SecurityConfig.kt
+│   └── JwtTokenProvider.kt
 ├── exception/
 │   └── GlobalExceptionHandler.kt
 ├── config/
