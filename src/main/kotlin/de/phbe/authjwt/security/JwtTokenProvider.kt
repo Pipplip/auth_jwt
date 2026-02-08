@@ -1,5 +1,6 @@
 package de.phbe.authjwt.security
 
+import de.phbe.authjwt.config.JwtProperties
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -7,9 +8,11 @@ import org.springframework.stereotype.Component
 import java.util.Date
 
 @Component
-class JwtTokenProvider {
-    private val secret = "my-secret-key" // Im realen Projekt extern speichern
-    private val validityInMs: Long = 3600000 // 1 Stunde
+class JwtTokenProvider(
+    private val jwtProperties: JwtProperties
+) {
+    private val secret = jwtProperties.secret
+    private val validityInMs = jwtProperties.expirationMs
 
     fun createToken(userId: String, email: String): String {
         val claims = Jwts.claims().setSubject(userId)
