@@ -6,27 +6,33 @@ import de.phbe.authjwt.user.domain.model.User
 import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.domain.repository.UserRepository
 import de.phbe.authjwt.user.security.PasswordHasher
+import org.springframework.stereotype.Service
 import java.time.Instant
 import java.util.UUID
 
 // verwendet zwei ports
+@Service
 class UserService(
     private val userRepository: UserRepository,
-    private val passwordHasher: PasswordHasher
-){
-    fun register(email: String, rawPassword: String): User {
+    private val passwordHasher: PasswordHasher,
+) {
+    fun register(
+        email: String,
+        rawPassword: String,
+    ): User {
         // 1 Fachliche Regel: E-Mail muss eindeutig sein
         if (userRepository.findByEmail(email) != null) {
             throw UserAlreadyExistsException(email)
         }
 
         // 2 User erzeugen (Domain-Zustand)
-        val user = User(
-            id = UserId(UUID.randomUUID()),
-            email = email,
-            passwordHash = passwordHasher.hash(rawPassword),
-            registeredAt = Instant.now()
-        )
+        val user =
+            User(
+                id = UserId(UUID.randomUUID()),
+                email = email,
+                passwordHash = passwordHasher.hash(rawPassword),
+                registeredAt = Instant.now(),
+            )
 
         // 3 Persistieren
         userRepository.save(user)
