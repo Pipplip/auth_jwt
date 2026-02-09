@@ -3,7 +3,7 @@ package de.phbe.authjwt.user.web
 import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.service.UserService
 import de.phbe.authjwt.user.web.dto.UserResponse
-import de.phebe.authjwt.user.adapter.persistence.UserMapper
+import de.phbe.authjwt.user.adapter.persistence.UserMapper
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -14,12 +14,14 @@ class UserController(
     private val userService: UserService
 ) {
 
+    // DELETE: http://localhost:8080/users/ff16ce76-c8ea-4808-b146-e94cadeccfb2
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: UUID) {
         val user = userService.findById(UserId(id))
         userService.deleteUser(user)
     }
 
+    // GET: http://localhost:8080/users/profile
     @GetMapping("/profile")
     fun getProfile(): UserResponse {
         val currentUserId = getCurrentUserIdFromSecurityContext()

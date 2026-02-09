@@ -1,6 +1,5 @@
-package de.phebe.authjwt.user.adapter.persistence
+package de.phbe.authjwt.user.adapter.persistence
 
-import de.phbe.authjwt.user.adapter.persistence.UserJpaEntity
 import de.phbe.authjwt.user.domain.model.User
 import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.web.dto.UserResponse

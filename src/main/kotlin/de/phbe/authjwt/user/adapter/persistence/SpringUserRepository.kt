@@ -3,7 +3,6 @@ package de.phbe.authjwt.user.adapter.persistence
 import de.phbe.authjwt.user.domain.model.User
 import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.domain.repository.UserRepository
-import de.phebe.authjwt.user.adapter.persistence.UserMapper
 import org.springframework.stereotype.Component
 
 @Component
