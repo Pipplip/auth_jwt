@@ -1,7 +1,10 @@
 package de.phbe.authjwt.user.adapter.persistence
 
+import de.phbe.authjwt.user.domain.model.UserRole
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.Instant
@@ -19,6 +22,9 @@ data class UserJpaEntity(
 
     @Column(name = "password_hash", nullable = false)
     val passwordHash: String,
+
+    @Enumerated(EnumType.STRING)
+    val userRole: UserRole,
 
     @Column(name = "registered_at", nullable = false)
     val registeredAt: Instant

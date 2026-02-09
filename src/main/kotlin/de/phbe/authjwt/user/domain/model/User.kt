@@ -6,5 +6,6 @@ data class User(
     val id: UserId,
     val email: String,
     val passwordHash: String,
+    val userRole: UserRole,
     val registeredAt: Instant
 )

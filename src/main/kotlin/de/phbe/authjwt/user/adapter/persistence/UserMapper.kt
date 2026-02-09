@@ -11,6 +11,7 @@ object UserMapper {
             id = user.id.value,
             email = user.email,
             passwordHash = user.passwordHash,
+            userRole = user.userRole,
             registeredAt = user.registeredAt
         )
 
@@ -19,13 +20,15 @@ object UserMapper {
             id = UserId(entity.id),
             email = entity.email,
             passwordHash = entity.passwordHash,
+            userRole = entity.userRole,
             registeredAt = entity.registeredAt
         )
 
     fun toUserResponse(user: User): UserResponse =
         UserResponse(
-            user.id.value.toString(),
-            user.email,
-            user.registeredAt
+            id = user.id.value.toString(),
+            email = user.email,
+            userRole = user.userRole,
+            registeredAt = user.registeredAt
         )
 }

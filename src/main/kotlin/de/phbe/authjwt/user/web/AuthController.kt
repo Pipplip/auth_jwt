@@ -19,7 +19,7 @@ class AuthController(
         val user = userService.register(request.email, request.password)
 
         // JWT erzeugen
-        val token = jwtTokenProvider.createToken(user.id.value.toString(), user.email)
+        val token = jwtTokenProvider.createToken(user.id.value.toString(), user.email, user.userRole)
         return JwtResponse(token)
     }
 
@@ -30,7 +30,7 @@ class AuthController(
         val user = userService.authenticate(request.email, request.password)
 
         // JWT erzeugen
-        val token = jwtTokenProvider.createToken(user.id.value.toString(), user.email)
+        val token = jwtTokenProvider.createToken(user.id.value.toString(), user.email, user.userRole)
         return JwtResponse(token)
     }
 }

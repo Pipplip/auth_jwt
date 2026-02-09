@@ -1,6 +1,7 @@
 package de.phbe.authjwt.security
 
 import de.phbe.authjwt.config.JwtProperties
+import de.phbe.authjwt.user.domain.model.UserRole
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -14,9 +15,10 @@ class JwtTokenProvider(
     private val secret = jwtProperties.secret
     private val validityInMs = jwtProperties.expirationMs
 
-    fun createToken(userId: String, email: String): String {
+    fun createToken(userId: String, email: String, userRole: UserRole): String {
         val claims = Jwts.claims().setSubject(userId)
         claims["email"] = email
+        claims["role"] = userRole.name
 
         val now = Date()
         val validity = Date(now.time + validityInMs)

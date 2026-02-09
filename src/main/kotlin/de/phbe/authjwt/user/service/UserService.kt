@@ -4,6 +4,7 @@ import de.phbe.authjwt.user.domain.exception.UserAlreadyExistsException
 import de.phbe.authjwt.user.domain.exception.UserNotFoundException
 import de.phbe.authjwt.user.domain.model.User
 import de.phbe.authjwt.user.domain.model.UserId
+import de.phbe.authjwt.user.domain.model.UserRole
 import de.phbe.authjwt.user.domain.repository.UserRepository
 import de.phbe.authjwt.user.security.PasswordHasher
 import org.springframework.stereotype.Service
@@ -32,6 +33,7 @@ class UserService(
                 email = email,
                 passwordHash = passwordHasher.hash(rawPassword),
                 registeredAt = Instant.now(),
+                userRole = UserRole.USER
             )
 
         // 3 Persistieren
