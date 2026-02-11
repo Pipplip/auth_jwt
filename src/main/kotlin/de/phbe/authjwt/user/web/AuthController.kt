@@ -1,36 +1,45 @@
 package de.phbe.authjwt.user.web
 
-import de.phbe.authjwt.security.JwtTokenProvider
+import de.phbe.authjwt.user.service.AuthService
+import de.phbe.authjwt.user.web.dto.AuthTokens
 import de.phbe.authjwt.user.web.dto.LoginRequest
-import de.phbe.authjwt.user.web.dto.JwtResponse
 import org.springframework.web.bind.annotation.*
-import de.phbe.authjwt.user.service.UserService
-import de.phbe.authjwt.user.web.dto.RegisterRequest
+import de.phbe.authjwt.user.web.dto.RefreshRequest
+import org.springframework.http.ResponseEntity
 
 @RestController
 @RequestMapping("/auth")
 class AuthController(
-    private val userService: UserService,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val authService: AuthService,
 ) {
-    @PostMapping("/register")
-    fun register(@RequestBody request: RegisterRequest): JwtResponse  {
-        // Service erstellt User
-        val user = userService.register(request.email, request.password)
+    // Zweck: Login / Tokens-Ausgabe
+    @PostMapping("/login")
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthTokens> {
+        val tokens = authService.login(request.email, request.password)
 
-        // JWT erzeugen
-        val token = jwtTokenProvider.createToken(user.id.value.toString(), user.email, user.userRole)
-        return JwtResponse(token)
+        return ResponseEntity.ok(
+            AuthTokens(
+                accessToken = tokens.accessToken,
+                refreshToken = tokens.refreshToken
+            )
+        )
     }
 
-    // Zweck: Login / Token-Ausgabe
-    @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): JwtResponse {
-        // User authentifizieren
-        val user = userService.authenticate(request.email, request.password)
+    @PostMapping("/refresh")
+    fun refresh(@RequestBody request: RefreshRequest): ResponseEntity<AuthTokens> {
+        val tokens = authService.refresh(request.refreshToken)
 
-        // JWT erzeugen
-        val token = jwtTokenProvider.createToken(user.id.value.toString(), user.email, user.userRole)
-        return JwtResponse(token)
+        return ResponseEntity.ok(
+            AuthTokens(
+                accessToken = tokens.accessToken,
+                refreshToken = tokens.refreshToken
+            )
+        )
+    }
+
+    @PostMapping("/logout")
+    fun logout(@RequestBody request: RefreshRequest): ResponseEntity<Void> {
+        authService.invalidateRefreshToken(request.refreshToken)
+        return ResponseEntity.noContent().build()
     }
 }

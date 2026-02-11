@@ -9,5 +9,6 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties(prefix = "security.jwt")
 class JwtProperties {
     lateinit var secret: String
-    var expirationMs: Long = 0
+    var expirationAccess: Long = 0
+    var expirationRefresh: Long = 0
 }

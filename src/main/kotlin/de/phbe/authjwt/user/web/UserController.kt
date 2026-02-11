@@ -4,6 +4,8 @@ import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.service.UserService
 import de.phbe.authjwt.user.web.dto.UserResponse
 import de.phbe.authjwt.user.adapter.persistence.UserMapper
+import de.phbe.authjwt.user.web.dto.RegisterRequest
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -13,6 +15,18 @@ import java.util.UUID
 class UserController(
     private val userService: UserService
 ) {
+
+    @PostMapping
+    fun register(@RequestBody request: RegisterRequest): ResponseEntity<UserResponse> {
+        val user = userService.register(
+            email = request.email,
+            rawPassword = request.password
+        )
+
+        return ResponseEntity.ok(
+            UserResponse.from(user)
+        )
+    }
 
     // DELETE: http://localhost:8080/users/ff16ce76-c8ea-4808-b146-e94cadeccfb2
     @DeleteMapping("/{id}")

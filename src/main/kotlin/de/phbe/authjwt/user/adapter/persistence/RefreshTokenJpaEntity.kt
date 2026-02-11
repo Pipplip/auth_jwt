@@ -1,0 +1,17 @@
+package de.phbe.authjwt.user.adapter.persistence
+
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import jakarta.persistence.Id
+import java.time.Instant
+import java.util.UUID
+
+@Entity
+@Table(name = "refresh_tokens")
+class RefreshTokenJpaEntity(
+    @Id
+    val token: String,
+
+    val userId: UUID,
+    val expiresAt: Instant
+)

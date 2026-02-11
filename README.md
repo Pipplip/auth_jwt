@@ -1,5 +1,5 @@
 # auth_jwt
-Auth with JWT in Koltin and SpringBoot
+Auth with JWT in Kotlin and SpringBoot
 
 ## Dependencies
 Spring Boot Starter
@@ -50,18 +50,19 @@ Arten von Ports:
            │-------------------------│
            │ AuthController          │
            │ UserController          │
-           └─────────┬──────────────┘
+           └─────────┬───────────────┘
                      │ ruft
                      ▼
            ┌─────────────────────────┐
            │       Service /         │  ← Use Cases / Application Layer
            │    UserService          │
-           └─────────┬──────────────┘
-                     │ nutzt
+           │    AuthService          │
+           └─────────┬───────────────┘
+                     │ nutzt im Fall UserService
           ┌──────────┴───────────┐
           │                      │
           ▼                      ▼
-┌─────────────────┐     ┌─────────────────┐
+┌──────────────────┐     ┌─────────────────┐
 │   UserRepository │     │ PasswordHasher  │  ← Outbound Ports (Interfaces)
 │   (Interface)    │     │ (Interface)     │
 └─────────┬────────┘     └─────────┬───────┘
@@ -83,7 +84,7 @@ Arten von Ports:
 
 ```
 
-Controller = Schnittstelle außen
+Controller = Schnittstelle von außen
 
 Service = Use Case / Logik-Knoten
 
@@ -97,28 +98,38 @@ de.phbe.authjwt
 ├── user/
 │   ├── domain/
 │   │   ├── exception/
+│   │   │   ├── UserNotFoundException.kt
 │   │   │   └── UserAlreadyExistsException.kt
 │   │   ├── model/
+│   │   │   ├── RefreshToken.kt
 │   │   │   ├── User.kt
-│   │   │   └── UserId.kt
-│   │   └── repository/  ← Outbound Port
+│   │   │   ├── UserId.kt
+│   │   │   └── UserRole.kt
+│   │   └── repository/  (← Outbound Port)
+│   │       ├── RefreshTokenRepository.kt
 │   │       └── UserRepository.kt
 │   ├── adapter/
 │   │   ├── persistence/
+│   │   │   ├── JpaRefreshTokenRepository.kt
+│   │   │   ├── RefreshTokenJpaEntity.kt
+│   │   │   ├── RefreshTokenMapper.kt
+│   │   │   ├── SpringRefreshTokenRepository.kt
 │   │   │   ├── SpringUserRepository.kt
 │   │   │   ├── UserJpaEntity.kt
 │   │   │   ├── JpaUserRepository.kt
 │   │   │   └── UserMapper.kt
 │   │   └── security/
 │   │       └── BCryptPasswordHasher.kt
-│   ├── service/ ← Application / Use Cases
+│   ├── service/ (← Application / Use Cases)
+│   │   │── AuthService.kt
 │   │   └── UserService.kt
 │   ├── security/
-│   │   └── PasswordHasher.kt ← Outbound Port
-│   └── web/  ← Inbound Adapter
+│   │   └── PasswordHasher.kt (← Outbound Port)
+│   └── web/  (← Inbound Adapter)
 │       ├── dto/
 │       │   ├── LoginRequest.kt
-│       │   ├── JwtResponse.kt
+│       │   ├── AuthTokens.kt
+│       │   ├── RefreshRequest.kt
 │       │   ├── RegisterRequest.kt
 │       │   └── UserResponse.kt
 │       ├── AuthController.kt
