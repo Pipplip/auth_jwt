@@ -6,6 +6,7 @@ import de.phbe.authjwt.user.domain.model.RefreshToken
 import de.phbe.authjwt.user.domain.repository.RefreshTokenRepository
 import de.phbe.authjwt.user.web.dto.AuthTokens
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.util.UUID
 
@@ -17,13 +18,14 @@ class AuthService(
     private val jwtProperties: JwtProperties
 ) {
 
+    @Transactional
     fun login(email: String, rawPassword: String): AuthTokens {
         val user = userService.authenticate(email, rawPassword)
 
         val accessToken = jwtTokenProvider.createAccessToken(user)
         val refreshToken = UUID.randomUUID().toString()
 
-        refreshTokenRepository.deleteAllByUserId(user.id.value.toString())
+        refreshTokenRepository.deleteAllByUserId(user.id.value)
 
         refreshTokenRepository.save(
             RefreshToken(
