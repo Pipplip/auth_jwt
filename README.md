@@ -20,6 +20,7 @@ Springdoc OpenAPI (Swagger)
 3. Tests hinzufügen (Unit Tests für Services, Integrationstests für Controller)
 4. Dockerfile erstellen für MySQL und die Spring Boot App
 5. DEV environment ermöglichen (application-dev.properties mit eventuell H2 DB, Docker Compose für MySQL und App)
+6. Exception handling verbessern (z.B. spezifische Fehlercodes, bessere Fehlermeldungen)
 
 ## Ausführung
 

@@ -21,7 +21,9 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/auth/**").permitAll()  // Register/Login öffentlich
+//                    .requestMatchers("/auth/**").permitAll()  // Register/Login öffentlich
+                    .requestMatchers("/auth/register").permitAll()  // Register/Login öffentlich
+                    .requestMatchers("/auth/login").permitAll()  // Register/Login öffentlich
                     .anyRequest().authenticated()             // alles andere geschützt
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
