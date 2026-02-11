@@ -23,6 +23,8 @@ class AuthService(
         val accessToken = jwtTokenProvider.createAccessToken(user)
         val refreshToken = UUID.randomUUID().toString()
 
+        refreshTokenRepository.deleteAllByUserId(user.id.value.toString())
+
         refreshTokenRepository.save(
             RefreshToken(
                 token = refreshToken,

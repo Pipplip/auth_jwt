@@ -19,4 +19,8 @@ class SpringRefreshTokenRepository(
 
     override fun delete(token: String) =
         jpaRepo.deleteById(token)
+
+    override fun deleteAllByUserId(userId: String) {
+        jpaRepo.deleteAllByUserId(userId)
+    }
 }

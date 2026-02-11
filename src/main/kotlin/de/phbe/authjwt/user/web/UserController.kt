@@ -15,19 +15,6 @@ import java.util.UUID
 class UserController(
     private val userService: UserService
 ) {
-
-    @PostMapping
-    fun register(@RequestBody request: RegisterRequest): ResponseEntity<UserResponse> {
-        val user = userService.register(
-            email = request.email,
-            rawPassword = request.password
-        )
-
-        return ResponseEntity.ok(
-            UserResponse.from(user)
-        )
-    }
-
     // DELETE: http://localhost:8080/users/ff16ce76-c8ea-4808-b146-e94cadeccfb2
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: UUID) {
