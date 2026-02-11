@@ -1,7 +1,6 @@
 package de.phbe.authjwt.user.web
 
 import de.phbe.authjwt.user.service.AuthService
-import de.phbe.authjwt.user.service.UserService
 import de.phbe.authjwt.user.web.dto.AuthTokens
 import de.phbe.authjwt.user.web.dto.LoginRequest
 import de.phbe.authjwt.user.web.dto.RefreshRequest
@@ -15,19 +14,13 @@ import org.springframework.http.ResponseEntity
 @RequestMapping("/auth")
 class AuthController(
     private val authService: AuthService,
-    private val userService: UserService,
     private val maxAgeCookie: Long = 7 * 24 * 60 * 60L, // 7 Tage in Sekunden
     private val useCookies: Boolean = false
 ) {
 
     @PostMapping("/register")
     fun register(@RequestBody request: RegisterRequest): ResponseEntity<AuthTokens> {
-        val user = userService.register(
-            email = request.email,
-            rawPassword = request.password
-        )
-
-        val tokens = authService.login(request.email, request.password)
+        val tokens = authService.register(request.email, request.password)
 
         // Access Token und Refresh Token im Body zurückgeben
         return ResponseEntity.ok(

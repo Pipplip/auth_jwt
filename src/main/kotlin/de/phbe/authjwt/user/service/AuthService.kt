@@ -39,6 +39,26 @@ class AuthService(
         )
     }
 
+    fun register(email: String, rawPassword: String): AuthTokens {
+        val user = userService.register(email, rawPassword)
+
+        val accessToken = jwtTokenProvider.createAccessToken(user)
+        val refreshToken = UUID.randomUUID().toString()
+
+        refreshTokenRepository.save(
+            RefreshToken(
+                token = refreshToken,
+                userId = user.id,
+                expiresAt = Instant.now().plusSeconds(jwtProperties.expirationRefresh)
+            )
+        )
+
+        return AuthTokens(
+            accessToken = accessToken,
+            refreshToken = refreshToken
+        )
+    }
+
     fun refresh(refreshToken: String): AuthTokens {
         val stored = refreshTokenRepository.findByToken(refreshToken)
             ?: throw IllegalArgumentException("Invalid refresh token")
