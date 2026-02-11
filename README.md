@@ -1,5 +1,5 @@
 # auth_jwt
-Auth with JWT in Kotlin and SpringBoot
+Einfache Userverwaltung: Auth mit JWT (Access/Refresh-Token) in Kotlin und SpringBoot
 
 ## Dependencies
 Spring Boot Starter
@@ -12,6 +12,36 @@ Spring Boot Starter
 Flyway DB Migration
 
 Springdoc OpenAPI (Swagger)
+
+## ToDo
+
+1. Flyway DB Migration hinzufügen
+2. Swagger UI anpassen (z.B. Titel, Beschreibung, API-Gruppierung)
+3. Tests hinzufügen (Unit Tests für Services, Integrationstests für Controller)
+4. Dockerfile erstellen für MySQL und die Spring Boot App
+5. DEV environment ermöglichen (application-dev.properties mit eventuell H2 DB, Docker Compose für MySQL und App)
+
+## Ausführung
+
+1. MySQL Server starten. Hört auf Port 3333 (kann in `application.properties` angepasst werden)
+2. Datenbank `userdb` anlegen
+3. Projekt starten (z.B. über IDE oder `./gradlew bootRun`) - http://localhost:8080
+4. Swagger UI: http://localhost:8080/swagger-ui.html
+5. API testen mit API tools oder eine client-app bauen: z.B. Registrierung, Login, Token-Refresh
+
+**Info:** RefreshTokens werden nicht als HttpOnly-Cookies gesetzt. Stattdessen werden sie im Response Body zurückgegeben.
+Dies ist einfacher zu testen. Implementierung ist aber vorhanden und kann im AuthController angepasst werden.
+
+## Endpoints
+
+| Endpoint         | Methode  | Body                                  | Header                                   | Beispiel                                                  |
+|------------------|----------|---------------------------------------|------------------------------------------|-----------------------------------------------------------|
+| `/auth/register` | `POST`   | JSON mit `email`, `password`          | ❌ Kein Token erforderlich                | BODY: {"email": "testuser", "password": "testpass"}       |
+| `/auth/login`    | `POST`   | JSON mit `email`, `password`          | ❌ Kein Token erforderlich                |                                                           |
+| `/auth/refresh`  | `POST`   | JSON mit `refreshToken`               | ✅ `Authorization: Bearer <accessToken>`  | {"refreshToken":"037df2a8-3d21-41c2-863f-660ffe50c432"}   |
+| `/auth/logout`   | `POST`   | JSON mit `refreshToken`               | ✅ `Authorization: Bearer <accessToken>`  | {"refreshToken":"037df2a8-3d21-41c2-863f-660ffe50c432"}   |
+| `/users/profile` | `GET`    | `-`                                   | ✅ `Authorization: Bearer <accessToken>`  |                                                           |
+| `/users/{id}`    | `DELETE` | Kein Body aber UUID des Users im Pfad | ✅ `Authorization: Bearer <accessToken>`  | localhost:8080/users/ff16ce76-c8ea-4808-b146-e94cadeccfb2 |
 
 ## Begriffe
 
