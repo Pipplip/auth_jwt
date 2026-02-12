@@ -65,6 +65,7 @@ dependencies {
     testImplementation(libs.kotest.property)
     testImplementation(libs.kotest.extensions.junitxml)
     testImplementation(libs.kotest.extensions.spring)
+    testImplementation(libs.kotest.extensions.core)
     testImplementation(libs.mockk)
 }
 
