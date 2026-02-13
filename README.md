@@ -18,7 +18,6 @@ Springdoc OpenAPI (Swagger)
 1. Flyway DB Migration hinzufügen
 2. Swagger UI anpassen (z.B. Titel, Beschreibung, API-Gruppierung)
 3. Dockerfile erstellen für MySQL und die Spring Boot App
-4. Exception handling verbessern (z.B. spezifische Fehlercodes, bessere Fehlermeldungen)
 
 ## Ausführung
 
@@ -32,7 +31,7 @@ Springdoc OpenAPI (Swagger)
 
 Drei Umgebungen sind angelegt: DEV, TEST, PROD. (`application-dev.properties`, `application-test.properties`, `application-prod.properties`)
 
-Drei Möglichkeiten, um die Umgebung auszuwählen:
+Möglichkeiten, um die Umgebung auszuwählen:
 1. In `application.properties` die Zeile `spring.profiles.active=dev` hinzufügen
 2. Über die JVM-Option `-Dspring.profiles.active=dev` beim Starten der App
 3. Über die Gradle-Option `-Dspring-boot.run.profiles=dev` beim Ausführen von `./gradlew bootRun`

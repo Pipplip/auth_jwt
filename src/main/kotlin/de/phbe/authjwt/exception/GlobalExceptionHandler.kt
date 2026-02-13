@@ -1,35 +1,76 @@
 package de.phebe.authjwt.exception
 
+import de.phbe.authjwt.user.domain.exception.InvalidCredentialsException
+import de.phbe.authjwt.user.domain.exception.UnauthorizedException
 import de.phbe.authjwt.user.domain.exception.UserAlreadyExistsException
 import de.phbe.authjwt.user.domain.exception.UserNotFoundException
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.time.LocalDateTime
 
 // Fangt alle Exceptions ab, die in Controllern auftreten
 // Übersetzt sie in HTTP-Statuscodes + DTOs für die Response
 
-data class ErrorResponse(val message: String?, val code: Int)
+data class ErrorResponse(
+    val timestamp: LocalDateTime = LocalDateTime.now(),
+    val status: Int,
+    val error: String,
+    val message: String?,
+    val path: String?
+)
 
 @ControllerAdvice
 class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException::class)
-    fun handleUserAlreadyExists(ex: UserAlreadyExistsException): ResponseEntity<ErrorResponse> {
-        val error = ErrorResponse(ex.message, HttpStatus.CONFLICT.value())
-        return ResponseEntity(error, HttpStatus.CONFLICT)
-    }
+    fun handleUserAlreadyExists(ex: UserAlreadyExistsException) =
+        buildResponse(ex.message, HttpStatus.CONFLICT)
 
     @ExceptionHandler(UserNotFoundException::class)
-    fun handleUserNotFound(ex: UserNotFoundException): ResponseEntity<ErrorResponse> {
-        val error = ErrorResponse(ex.message, HttpStatus.NOT_FOUND.value())
-        return ResponseEntity(error, HttpStatus.NOT_FOUND)
-    }
+    fun handleUserNotFound(ex: UserNotFoundException) =
+        buildResponse(ex.message, HttpStatus.NOT_FOUND)
+
+    @ExceptionHandler(InvalidCredentialsException::class)
+    fun handleInvalidCredentials(ex: InvalidCredentialsException) =
+        buildResponse(ex.message, HttpStatus.UNAUTHORIZED)
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorized(ex: UnauthorizedException) =
+        buildResponse(ex.message, HttpStatus.UNAUTHORIZED)
 
     @ExceptionHandler(Exception::class)
-    fun handleGenericException(ex: Exception): ResponseEntity<ErrorResponse> {
-        val error = ErrorResponse(ex.message ?: "Unknown error", HttpStatus.INTERNAL_SERVER_ERROR.value())
+    fun handleGenericException(
+        ex: Exception,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> {
+
+        // Logge die Exception (z.B. mit Logger, hier nur printStackTrace)
+        ex.printStackTrace()
+
+        val error = ErrorResponse(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            error = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase,
+            message = "Unexpected server error",
+            path = request.requestURI
+        )
         return ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    private fun buildResponse(
+        message: String?,
+        status: HttpStatus
+    ): ResponseEntity<ErrorResponse> {
+        return ResponseEntity(
+            ErrorResponse(
+                status = status.value(),
+                error = status.reasonPhrase,
+                message = message,
+                path = null
+            ),
+            status
+        )
     }
 }

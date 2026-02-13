@@ -2,6 +2,8 @@ package de.phbe.authjwt.user.service
 
 import de.phbe.authjwt.config.JwtProperties
 import de.phbe.authjwt.security.JwtTokenProvider
+import de.phbe.authjwt.user.domain.exception.InvalidRefreshTokenException
+import de.phbe.authjwt.user.domain.exception.RefreshTokenExpiredException
 import de.phbe.authjwt.user.domain.model.RefreshToken
 import de.phbe.authjwt.user.domain.repository.RefreshTokenRepository
 import de.phbe.authjwt.user.web.dto.AuthTokens
@@ -41,6 +43,7 @@ class AuthService(
         )
     }
 
+    @Transactional
     fun register(email: String, rawPassword: String): AuthTokens {
         val user = userService.register(email, rawPassword)
 
@@ -63,11 +66,11 @@ class AuthService(
 
     fun refresh(refreshToken: String): AuthTokens {
         val stored = refreshTokenRepository.findByToken(refreshToken)
-            ?: throw IllegalArgumentException("Invalid refresh token")
+            ?: throw InvalidRefreshTokenException()
 
         if (stored.expiresAt.isBefore(Instant.now())) {
             refreshTokenRepository.delete(refreshToken)
-            throw IllegalArgumentException("Refresh token expired")
+            throw RefreshTokenExpiredException()
         }
 
         val user = userService.findById(stored.userId)

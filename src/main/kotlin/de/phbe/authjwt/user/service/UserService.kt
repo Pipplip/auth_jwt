@@ -1,5 +1,7 @@
 package de.phbe.authjwt.user.service
 
+import de.phbe.authjwt.user.domain.exception.InvalidCredentialsException
+import de.phbe.authjwt.user.domain.exception.UnauthorizedException
 import de.phbe.authjwt.user.domain.exception.UserAlreadyExistsException
 import de.phbe.authjwt.user.domain.exception.UserNotFoundException
 import de.phbe.authjwt.user.domain.model.User
@@ -50,21 +52,22 @@ class UserService(
 
     fun authenticate(email: String, rawPassword: String): User {
         val user = userRepository.findByEmail(email)
-            ?: throw IllegalArgumentException("Invalid credentials")
+            ?: throw InvalidCredentialsException()
 
         if (!passwordHasher.matches(rawPassword, user.passwordHash)) {
-            throw IllegalArgumentException("Invalid credentials")
+            throw InvalidCredentialsException()
         }
 
         return user
     }
 
-    fun deleteUser(user: User) {
-        // hier könnten später Fachregeln stehen:
-        // - darf sich selbst löschen?
-        // - nur Admin?
-        // - Soft Delete?
+    fun deleteUser(userToDelete: User, currentUser: User) {
+        // nur admins dürfen löschen
+        // und man darf sich nicht selbst löschen (sonst könnte man sich aus dem System aussperren)
+        if (currentUser.id != userToDelete.id && currentUser.userRole != UserRole.ADMIN) {
+            throw UnauthorizedException()
+        }
 
-        userRepository.delete(user)
+        userRepository.delete(userToDelete)
     }
 }
