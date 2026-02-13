@@ -11,9 +11,11 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.springframework.test.context.ActiveProfiles
 import java.time.Instant
 import java.util.UUID
 
+@ActiveProfiles("test")
 class UserServiceTest : FunSpec({
     val userRepository = mockk<UserRepository>(relaxed = true)
     val passwordHasher = mockk<PasswordHasher>()
@@ -21,7 +23,7 @@ class UserServiceTest : FunSpec({
     val userId = UserId(UUID.randomUUID())
     val user = User(userId, "test@example.com", "hashed", UserRole.USER, Instant.now())
 
-    test("User wird registriert, wenn E-Mail nicht existiert") {
+    test("User wird registriert, wenn E-Mail noch nicht existiert") {
         every { userRepository.findByEmail(any()) } returns null
         every { passwordHasher.hash(any()) } returns "hashed"
         every { userRepository.save(any()) } returns user

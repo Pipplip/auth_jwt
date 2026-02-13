@@ -12,6 +12,7 @@ mysql = "8.1.0"
 flyway = "12.0.0"
 springdoc = "2.3.0"
 mockk = "1.14.6"
+h2 = "2.4.240"
 kotlin-logging = "7.0.13"
 logstash = "8.1"
 
@@ -34,6 +35,8 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+
+h2-db = { module = "com.h2database:h2", version.ref = "h2" }
 
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 mysql-connector = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }

@@ -11,9 +11,11 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import org.springframework.test.context.ActiveProfiles
 import java.time.Instant
 import java.util.UUID
 
+@ActiveProfiles("test")
 class AuthServiceTest : FunSpec({
     val userService = mockk<UserService>()
     val refreshTokenRepository = mockk<RefreshTokenRepository>(relaxed = true)

@@ -6,9 +6,11 @@ import de.phbe.authjwt.user.web.dto.LoginRequest
 import de.phbe.authjwt.user.web.dto.RefreshRequest
 import de.phbe.authjwt.user.web.dto.RegisterRequest
 import de.phbe.authjwt.user.web.dto.UserResponse
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/auth")
@@ -34,14 +36,18 @@ class AuthController(
     // Zweck: Login / Tokens-Ausgabe
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthTokens> {
-        val tokens = authService.login(request.email, request.password)
+        return try {
+            val tokens = authService.login(request.email, request.password)
 
-        return ResponseEntity.ok(
-            AuthTokens(
-                accessToken = tokens.accessToken,
-                refreshToken = tokens.refreshToken
+            return ResponseEntity.ok(
+                AuthTokens(
+                    accessToken = tokens.accessToken,
+                    refreshToken = tokens.refreshToken
+                )
             )
-        )
+        }catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, e.message)
+        }
     }
 
     @PostMapping("/refresh")

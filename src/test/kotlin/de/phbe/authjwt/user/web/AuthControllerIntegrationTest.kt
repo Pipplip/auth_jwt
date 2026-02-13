@@ -3,6 +3,7 @@ package de.phbe.authjwt.user.web
 import de.phbe.authjwt.user.web.dto.LoginRequest
 import de.phbe.authjwt.user.web.dto.RegisterRequest
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -10,45 +11,59 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.test.context.ActiveProfiles
 import tools.jackson.module.kotlin.jacksonObjectMapper
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllerIntegrationTest @Autowired constructor(
-    val mockMvc: MockMvc
-) : FunSpec({
+@ActiveProfiles("test")
+class AuthControllerIntegrationTest : FunSpec(){
+
+    @Autowired
+    lateinit var mockMvc: MockMvc
+
     val objectMapper = jacksonObjectMapper()
 
-    test("Registrierung und Login liefern JWT-Tokens") {
-        val email = "integrationtest@example.com"
-        val password = "testpass123"
-        val registerRequest = RegisterRequest(email, password)
-        val loginRequest = LoginRequest(email, password)
+    init{
+        extension(SpringExtension())
 
-        // Registrierung
-        mockMvc.post("/auth/register") {
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(registerRequest)
-        }.andExpect { status { isOk() } }
+        test("Registrierung und Login liefern JWT-Tokens") {
+            val email = "integrationtest@example.com"
+            val password = "testpass123"
+            val registerRequest = RegisterRequest(email, password)
+            val loginRequest = LoginRequest(email, password)
 
-        // Login
-        val loginResult = mockMvc.post("/auth/login") {
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(loginRequest)
-        }.andExpect { status { isOk() } }
-            .andReturn()
+            // Registrierung
+            val registerResult = mockMvc.post("/auth/register") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(registerRequest)
+            }.andExpect {
+                status { isOk() }
+            }.andReturn()
 
-        val responseBody = loginResult.response.contentAsString
-        val tokens = objectMapper.readTree(responseBody)
-        tokens.has("accessToken") shouldBe true
-        tokens.has("refreshToken") shouldBe true
+            // Login
+            val loginResult = mockMvc.post("/auth/login") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(loginRequest)
+            }.andExpect { status { isOk() } }
+                .andReturn()
+
+            val responseBodyRegister = registerResult.response.contentAsString
+            val responseBodyLogin = loginResult.response.contentAsString
+            val tokensRegister = objectMapper.readTree(responseBodyRegister)
+            val tokensLogin = objectMapper.readTree(responseBodyLogin)
+            tokensRegister.has("accessToken") shouldBe true
+            tokensRegister.has("refreshToken") shouldBe true
+            tokensLogin.has("accessToken") shouldBe true
+            tokensLogin.has("refreshToken") shouldBe true
+        }
+
+        test("Login mit falschem Passwort liefert Fehler") {
+            val loginRequest = LoginRequest("integrationtest@example.com", "falsch")
+            mockMvc.post("/auth/login") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(loginRequest)
+            }.andExpect { status { is4xxClientError() } }
+        }
     }
-
-    test("Login mit falschem Passwort liefert Fehler") {
-        val loginRequest = LoginRequest("integrationtest@example.com", "falsch")
-        mockMvc.post("/auth/login") {
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(loginRequest)
-        }.andExpect { status { is4xxClientError() } }
-    }
-})
+}

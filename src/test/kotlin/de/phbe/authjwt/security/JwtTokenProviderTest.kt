@@ -6,8 +6,10 @@ import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.domain.model.UserRole
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import org.springframework.test.context.ActiveProfiles
 import java.util.UUID
 
+@ActiveProfiles("test")
 class JwtTokenProviderTest : FunSpec({
     val jwtProperties = JwtProperties().apply {
         secret = "mysecretkeymysecretkeymysecretkeymysecretkey"

@@ -17,10 +17,8 @@ Springdoc OpenAPI (Swagger)
 
 1. Flyway DB Migration hinzufügen
 2. Swagger UI anpassen (z.B. Titel, Beschreibung, API-Gruppierung)
-3. Tests hinzufügen (Unit Tests für Services, Integrationstests für Controller)
-4. Dockerfile erstellen für MySQL und die Spring Boot App
-5. DEV environment ermöglichen (application-dev.properties mit eventuell H2 DB, Docker Compose für MySQL und App)
-6. Exception handling verbessern (z.B. spezifische Fehlercodes, bessere Fehlermeldungen)
+3. Dockerfile erstellen für MySQL und die Spring Boot App
+4. Exception handling verbessern (z.B. spezifische Fehlercodes, bessere Fehlermeldungen)
 
 ## Ausführung
 
@@ -29,6 +27,16 @@ Springdoc OpenAPI (Swagger)
 3. Projekt starten (z.B. über IDE oder `./gradlew bootRun`) - http://localhost:8080
 4. Swagger UI: http://localhost:8080/swagger-ui.html
 5. API testen mit API tools oder eine client-app bauen: z.B. Registrierung, Login, Token-Refresh
+
+## Umgebung auswählen
+
+Drei Umgebungen sind angelegt: DEV, TEST, PROD. (`application-dev.properties`, `application-test.properties`, `application-prod.properties`)
+
+Drei Möglichkeiten, um die Umgebung auszuwählen:
+1. In `application.properties` die Zeile `spring.profiles.active=dev` hinzufügen
+2. Über die JVM-Option `-Dspring.profiles.active=dev` beim Starten der App
+3. Über die Gradle-Option `-Dspring-boot.run.profiles=dev` beim Ausführen von `./gradlew bootRun`
+4. Umgebungsvariable anlegen `export SPRING_PROFILES_ACTIVE=dev`
 
 **Info:** RefreshTokens werden nicht als HttpOnly-Cookies gesetzt. Stattdessen werden sie im Response Body zurückgegeben.
 Dies ist einfacher zu testen. Implementierung ist aber vorhanden und kann im AuthController angepasst werden.
