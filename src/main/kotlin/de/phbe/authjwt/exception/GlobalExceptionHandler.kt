@@ -1,4 +1,4 @@
-package de.phebe.authjwt.exception
+package de.phbe.authjwt.exception
 
 import de.phbe.authjwt.user.domain.exception.InvalidCredentialsException
 import de.phbe.authjwt.user.domain.exception.UnauthorizedException

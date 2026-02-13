@@ -43,7 +43,7 @@ dependencies {
 
     // Kotlin
     implementation(libs.kotlin.reflect)
-    implementation("tools.jackson.module:jackson-module-kotlin")
+    implementation(libs.kotlin.jackson)
 
     // JWT
     implementation(libs.jjwt.api)
