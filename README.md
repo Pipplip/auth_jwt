@@ -18,7 +18,6 @@ Springdoc OpenAPI (Swagger)
 1. Flyway DB Migration hinzufügen
 2. Swagger UI anpassen (z.B. Titel, Beschreibung, API-Gruppierung)
 3. Dockerfile erstellen für MySQL und die Spring Boot App
-4. Use refreshToken hash for Database entry
 
 ## Ausführung
 
@@ -43,14 +42,14 @@ Dies ist einfacher zu testen. Implementierung ist aber vorhanden und kann im Aut
 
 ## Endpoints
 
-| Endpoint         | Methode  | Body                                  | Header                                   | Beispiel                                                  |
-|------------------|----------|---------------------------------------|------------------------------------------|-----------------------------------------------------------|
-| `/auth/register` | `POST`   | JSON mit `email`, `password`          | ❌ Kein Token erforderlich                | BODY: {"email": "testuser", "password": "testpass"}       |
-| `/auth/login`    | `POST`   | JSON mit `email`, `password`          | ❌ Kein Token erforderlich                |                                                           |
-| `/auth/refresh`  | `POST`   | JSON mit `refreshToken`               | ✅ `Authorization: Bearer <accessToken>`  | {"refreshToken":"037df2a8-3d21-41c2-863f-660ffe50c432"}   |
-| `/auth/logout`   | `POST`   | JSON mit `refreshToken`               | ✅ `Authorization: Bearer <accessToken>`  | {"refreshToken":"037df2a8-3d21-41c2-863f-660ffe50c432"}   |
-| `/users/profile` | `GET`    | `-`                                   | ✅ `Authorization: Bearer <accessToken>`  |                                                           |
-| `/users/{id}`    | `DELETE` | Kein Body aber UUID des Users im Pfad | ✅ `Authorization: Bearer <accessToken>`  | localhost:8080/users/ff16ce76-c8ea-4808-b146-e94cadeccfb2 |
+| Endpoint         | Methode  | Body                                  | Header                                  | Beispiel                                                  |
+|------------------|----------|---------------------------------------|-----------------------------------------|-----------------------------------------------------------|
+| `/auth/register` | `POST`   | JSON mit `email`, `password`          | ❌ Kein Token erforderlich               | BODY: {"email": "testuser", "password": "testpass"}       |
+| `/auth/login`    | `POST`   | JSON mit `email`, `password`          | ❌ Kein Token erforderlich               |                                                           |
+| `/auth/refresh`  | `POST`   | JSON mit `refreshToken`               | ❌ Kein Token erforderlich               | {"refreshToken":"037df2a8-3d21-41c2-863f-660ffe50c432"}   |
+| `/auth/logout`   | `POST`   | JSON mit `refreshToken`               | ✅ `Authorization: Bearer <accessToken>` | {"refreshToken":"037df2a8-3d21-41c2-863f-660ffe50c432"}   |
+| `/users/profile` | `GET`    | `-`                                   | ✅ `Authorization: Bearer <accessToken>` |                                                           |
+| `/users/{id}`    | `DELETE` | Kein Body aber UUID des Users im Pfad | ✅ `Authorization: Bearer <accessToken>` | localhost:8080/users/ff16ce76-c8ea-4808-b146-e94cadeccfb2 |
 
 ## Begriffe
 

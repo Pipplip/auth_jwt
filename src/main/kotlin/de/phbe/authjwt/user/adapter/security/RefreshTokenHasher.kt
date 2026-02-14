@@ -14,8 +14,4 @@ class SHA256RefreshTokenHasher : RefreshTokenHasher {
         val hashedBytes = digest.digest(token.toByteArray())
         return Base64.getEncoder().encodeToString(hashedBytes)
     }
-
-    override fun matches(token: String, hash: String): Boolean {
-        return hash(token) == hash
-    }
 }

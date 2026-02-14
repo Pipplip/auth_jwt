@@ -28,7 +28,7 @@ class AuthService(
 
         val accessToken = jwtTokenProvider.createAccessToken(user)
         val refreshToken = UUID.randomUUID().toString()
-//        val refreshToken = refreshTokenHasher.hash(UUID.randomUUID().toString())
+        val hashedRefreshToken = refreshTokenHasher.hash(refreshToken)
 
         // Refresh Token auf invalid setzen oder löschen
 //        refreshTokenRepository.deleteAllByUserId(user.id.value)
@@ -36,7 +36,7 @@ class AuthService(
 
         refreshTokenRepository.save(
             RefreshToken(
-                token = refreshToken,
+                token = hashedRefreshToken,
                 userId = user.id,
                 expiresAt = Instant.now().plusMillis(jwtProperties.expirationRefresh)
             )
@@ -54,11 +54,11 @@ class AuthService(
 
         val accessToken = jwtTokenProvider.createAccessToken(user)
         val refreshToken = UUID.randomUUID().toString()
-//        val refreshToken = refreshTokenHasher.hash(UUID.randomUUID().toString())
+        val hashedRefreshToken = refreshTokenHasher.hash(refreshToken)
 
         refreshTokenRepository.save(
             RefreshToken(
-                token = refreshToken,
+                token = hashedRefreshToken,
                 userId = user.id,
                 expiresAt = Instant.now().plusMillis(jwtProperties.expirationRefresh)
             )
@@ -70,20 +70,22 @@ class AuthService(
         )
     }
 
+    @Transactional
     fun refresh(refreshToken: String): AuthTokens {
-        val stored = refreshTokenRepository.findByToken(refreshToken)
+        val hashedToken = refreshTokenHasher.hash(refreshToken)
+
+        val stored = refreshTokenRepository.findByToken(hashedToken)
             ?: throw InvalidRefreshTokenException()
 
         // Replay Angriff verhindern
         if (stored.invalidated) {
-            // High Security Variante:
             refreshTokenRepository.invalidateAllByUserId(stored.userId.value)
             throw InvalidRefreshTokenException()
         }
 
         if (stored.isExpired()) {
 //            refreshTokenRepository.delete(refreshToken)
-            refreshTokenRepository.invalidate(refreshToken)
+            refreshTokenRepository.invalidate(hashedToken)
             throw RefreshTokenExpiredException()
         }
 
@@ -91,13 +93,13 @@ class AuthService(
 
         // Optional & empfohlen: Rotation
 //        refreshTokenRepository.delete(refreshToken)
-        refreshTokenRepository.invalidate(refreshToken)
+        refreshTokenRepository.invalidate(hashedToken)
 
         val newRefreshToken = UUID.randomUUID().toString()
-//        val newRefreshToken = refreshTokenHasher.hash(UUID.randomUUID().toString())
+        val newHashedRefreshToken = refreshTokenHasher.hash(newRefreshToken)
         refreshTokenRepository.save(
             RefreshToken(
-                token = newRefreshToken,
+                token = newHashedRefreshToken,
                 userId = user.id,
                 expiresAt = Instant.now().plusMillis(jwtProperties.expirationRefresh)
             )
@@ -113,6 +115,7 @@ class AuthService(
 
     fun invalidateRefreshToken(refreshToken: String) {
 //        refreshTokenRepository.delete(refreshToken)
-        refreshTokenRepository.invalidate(refreshToken)
+        val hashedToken = refreshTokenHasher.hash(refreshToken)
+        refreshTokenRepository.invalidate(hashedToken)
     }
 }
