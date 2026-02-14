@@ -148,13 +148,26 @@ SpringUserRepository (Adapter) = nutzt intern Spring data, mapped zwischen Domai
 
 JpaUserRepository (Spring Data Zugriff) - Wie wird ausgeführt?
 Diese Repo bringt automatisch CRUD-Methoden mit:
-fun findById(id: UUID): Optional<UserJpaEntity>
-fun save(entity: UserJpaEntity): UserJpaEntity
-fun deleteById(id: UUID)
-fun delete(entity: UserJpaEntity)
-fun findAll(): List<UserJpaEntity>
-fun existsById(id: UUID): Boolean
-fun count(): Long
+- save
+- saveAll
+- saveAndFlush
+- saveAllAndFlush
+- findById
+- findAll
+- findAllById
+- findAll(Pageable)
+- findAll(Sort)
+- count
+- existsById
+- getReferenceById
+- delete
+- deleteById
+- deleteAll
+- deleteAll(Iterable)
+- deleteAllById
+- deleteAllInBatch
+- deleteAllByIdInBatch
+- deleteAllInBatch(Iterable)
 Die nicht explizit deklariert werden müssen.
 ↓
 
