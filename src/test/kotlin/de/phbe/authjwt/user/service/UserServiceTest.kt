@@ -3,6 +3,7 @@ package de.phbe.authjwt.user.service
 import de.phbe.authjwt.user.domain.model.User
 import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.domain.model.UserRole
+import de.phbe.authjwt.user.domain.repository.RefreshTokenRepository
 import de.phbe.authjwt.user.domain.repository.UserRepository
 import de.phbe.authjwt.user.security.PasswordHasher
 import io.kotest.assertions.throwables.shouldThrowAny
@@ -19,7 +20,8 @@ import java.util.UUID
 class UserServiceTest : FunSpec({
     val userRepository = mockk<UserRepository>(relaxed = true)
     val passwordHasher = mockk<PasswordHasher>()
-    val service = UserService(userRepository, passwordHasher)
+    val refreshTokenRepository = mockk<RefreshTokenRepository>(relaxed = true)
+    val service = UserService(userRepository, refreshTokenRepository, passwordHasher)
     val userId = UserId(UUID.randomUUID())
     val user = User(userId, "test@example.com", "hashed", UserRole.USER, Instant.now())
 
