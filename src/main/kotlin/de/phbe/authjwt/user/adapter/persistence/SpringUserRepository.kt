@@ -14,8 +14,8 @@ class SpringUserRepository(
         return jpaRepository.findByEmail(email)?.let { UserMapper.toDomain(it) }
     }
 
-    override fun findById(userId: UserId): User? {
-        return jpaRepository.findById(userId.value).orElse(null)?.let { UserMapper.toDomain(it) }
+    override fun findById(id: UserId): User? {
+        return jpaRepository.findById(id.value).orElse(null)?.let { UserMapper.toDomain(it) }
     }
 
     override fun save(user: User): User {

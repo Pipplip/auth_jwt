@@ -122,13 +122,140 @@ Arten von Ports:
 
 ```
 
-Controller = Schnittstelle von außen
+**Allgemein:**
+
+Controller = Schnittstelle nach außen. Ein Controller nimmt Requests an, leitet diese an den Service und gibt ein Response zurück.
 
 Service = Use Case / Logik-Knoten
 
 Ports = Interface für Abhängigkeiten nach außen
 
 Adapter = Implementierung dieser Ports
+
+### Repository Beziehungen
+
+```
+Application / Service Layer
+↓
+
+UserRepository (Domain Interface) = Domain Port, kennt nur Domain-Modell, nichts über DB oder Spring!
+= Vertrag! Was brauche ich?
+↓
+
+SpringUserRepository (Adapter) = nutzt intern Spring data, mapped zwischen Domain und JPA Entity
+= Übersetzer zwischen den Repos
+↓
+
+JpaUserRepository (Spring Data Zugriff) - Wie wird ausgeführt?
+Diese Repo bringt automatisch CRUD-Methoden mit:
+fun findById(id: UUID): Optional<UserJpaEntity>
+fun save(entity: UserJpaEntity): UserJpaEntity
+fun deleteById(id: UUID)
+fun delete(entity: UserJpaEntity)
+fun findAll(): List<UserJpaEntity>
+fun existsById(id: UUID): Boolean
+fun count(): Long
+Die nicht explizit deklariert werden müssen.
+↓
+
+Hibernate / JPA
+↓
+
+Datenbank
+```
+
+### Spring Data Namenskonvention
+
+Beispiel: UserRepository (Domain Interface):
+
+Ist kein Spring Data Interface, kann heißen wie es will und kann Funktionen benennen wie es will.
+Es ist ein normales Kotlin-Interface.
+
+Erst im JpaUserRepository ist die Namenskonvention wichtig, weil dies Spring Data JPA ist.
+Spring analysiert die Methodennamen und erzeugt daraus automatisch SQL.
+
+**Naming-Strategy**
+
+Allgemein wird:
+CamelCase zu snake_case
+und groß zu klein
+
+UserJpaRepo wird zu user_jpa_repo
+userRole wird zu user_role
+registeredAt wird zu registered_at
+
+**Wichtig:**
+Nur im JpaUserRepository müssen Methodennamen:
+- mit `find`, `exists`, `delete`, `count` beginnen
+- `By` enthalten
+- exakt die PropertNamen der Entitiy benutzen
+
+Bsp:
+Entity:
+val email -zu-> findByEmail
+val userRole -zu-> findByUerRole
+
+Man kann Namenskonventionen manuell überschreiben z.B.:
+```
+@Table(name = "users")
+@Column(name = "password_hash")
+@Column(name = "registered_at")
+```
+
+Hier müssen die Funktionsnamen dann so aussehen:
+findByPasswordHash()
+findByRegisteredAt()
+
+**@Query**
+wird verwendet wenn man komplexe SQL Queries verwendet. z.B. Joins etc.
+
+```
+@Query("""
+SELECT u FROM UserJpaEntity u
+JOIN u.orders o
+WHERE o.totalAmount > :amount
+""")
+fun findUsersWithLargeOrders(amount: BigDecimal)
+```
+Native Queries:
+```
+@Query(
+value = "SELECT * FROM users WHERE password_hash = ?1",
+nativeQuery = true
+)
+fun findByPasswordHashNative(hash: String)
+```
+
+| Prefix   | Bedeutung |
+| -------- | --------- |
+| findBy   | SELECT    |
+| readBy   | SELECT    |
+| getBy    | SELECT    |
+| queryBy  | SELECT    |
+| countBy  | COUNT     |
+| existsBy | EXISTS    |
+| deleteBy | DELETE    |
+| removeBy | DELETE    |
+
+| Schlüsselwort | Beispiel                              |
+| ------------- | ------------------------------------- |
+| And           | findByEmailAndUserRole                |
+| Or            | findByEmailOrUserRole                 |
+| Between       | findByRegisteredAtBetween             |
+| LessThan      | findByAgeLessThan                     |
+| GreaterThan   | findByAgeGreaterThan                  |
+| Like          | findByEmailLike                       |
+| Containing    | findByEmailContaining                 |
+| StartingWith  | findByEmailStartingWith               |
+| EndingWith    | findByEmailEndingWith                 |
+| In            | findByIdIn                            |
+| IsNull        | findByDeletedAtIsNull                 |
+| IsNotNull     | findByDeletedAtIsNotNull              |
+| True          | findByActiveTrue                      |
+| False         | findByActiveFalse                     |
+| OrderBy       | findByUserRoleOrderByRegisteredAtDesc |
+
+
 
 ## Struktur
 ```
@@ -137,6 +264,10 @@ de.phbe.authjwt
 │   ├── domain/
 │   │   ├── exception/
 │   │   │   ├── UserNotFoundException.kt
+│   │   │   ├── InvalidCredentialsException.kt
+│   │   │   ├── InvalidRefreshTokenException.kt
+│   │   │   ├── RefreshTokenExpiredException.kt
+│   │   │   ├── UnauthorizedException.kt
 │   │   │   └── UserAlreadyExistsException.kt
 │   │   ├── model/
 │   │   │   ├── RefreshToken.kt
@@ -157,6 +288,7 @@ de.phbe.authjwt
 │   │   │   ├── JpaUserRepository.kt
 │   │   │   └── UserMapper.kt
 │   │   └── security/
+│   │       ├── RefreshTokenHasher.kt
 │   │       └── BCryptPasswordHasher.kt
 │   ├── service/ (← Application / Use Cases)
 │   │   │── AuthService.kt
@@ -179,6 +311,7 @@ de.phbe.authjwt
 ├── exception/
 │   └── GlobalExceptionHandler.kt
 ├── config/
+│   ├── JwtProperties.kt
 │   └── OpenApiConfig.kt
 └── AuthJwtApplication.kt
 
