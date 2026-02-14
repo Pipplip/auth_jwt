@@ -7,6 +7,7 @@ import de.phbe.authjwt.user.domain.exception.UserNotFoundException
 import de.phbe.authjwt.user.domain.model.User
 import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.domain.model.UserRole
+import de.phbe.authjwt.user.domain.repository.RefreshTokenRepository
 import de.phbe.authjwt.user.domain.repository.UserRepository
 import de.phbe.authjwt.user.security.PasswordHasher
 import org.springframework.stereotype.Service
@@ -17,6 +18,7 @@ import java.util.UUID
 @Service
 class UserService(
     private val userRepository: UserRepository,
+    private val refreshTokenRepository: RefreshTokenRepository,
     private val passwordHasher: PasswordHasher,
 ) {
     fun register(
@@ -68,6 +70,7 @@ class UserService(
         if (currentUser.id == userToDelete.id && currentUser.userRole != UserRole.ADMIN) {
             throw UnauthorizedException()
         }
+        refreshTokenRepository.invalidateAllByUserId(userToDelete.id.value) // alle refreshTokens des Benutzers invalidieren
         userRepository.delete(userToDelete)
     }
 }

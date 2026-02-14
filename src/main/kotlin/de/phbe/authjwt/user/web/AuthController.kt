@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity
 class AuthController(
     private val authService: AuthService,
     private val maxAgeCookie: Long = 7 * 24 * 60 * 60L, // 7 Tage in Sekunden
-    private val useCookies: Boolean = false
 ) {
 
     @PostMapping("/register")
