@@ -6,6 +6,7 @@ import de.phbe.authjwt.user.domain.model.User
 import de.phbe.authjwt.user.domain.model.UserId
 import de.phbe.authjwt.user.domain.model.UserRole
 import de.phbe.authjwt.user.domain.repository.RefreshTokenRepository
+import de.phbe.authjwt.user.security.RefreshTokenHasher
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -24,8 +25,9 @@ class AuthServiceTest : FunSpec({
         expirationAccess = 60000L
         expirationRefresh = 120000L
     }
+    val refreshTokenHasher = mockk<RefreshTokenHasher>(relaxed = true)
     val jwtTokenProvider = JwtTokenProvider(jwtProperties)
-    val service = AuthService(userService, refreshTokenRepository, jwtTokenProvider, jwtProperties)
+    val service = AuthService(userService, refreshTokenRepository, jwtTokenProvider, jwtProperties, refreshTokenHasher)
     val user = User(UserId(UUID.randomUUID()), "test@example.com", "irrelevant", UserRole.USER, Instant.now())
 
     test("Login gibt Tokens zurück bei korrekten Credentials") {
