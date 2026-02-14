@@ -3,6 +3,7 @@ package de.phbe.authjwt.user.adapter.persistence
 import de.phbe.authjwt.user.domain.model.RefreshToken
 import de.phbe.authjwt.user.domain.repository.RefreshTokenRepository
 import org.springframework.stereotype.Component
+import java.time.Instant
 import java.util.UUID
 
 @Component
@@ -23,5 +24,13 @@ class SpringRefreshTokenRepository(
 
     override fun deleteAllByUserId(userId: UUID) {
         jpaRepo.deleteAllByUserId(userId)
+    }
+
+    override fun invalidate(token: String) {
+        jpaRepo.invalidateToken(token, Instant.now())
+    }
+
+    override fun invalidateAllByUserId(userId: UUID) {
+        jpaRepo.invalidateAllByUserId(userId, Instant.now())
     }
 }

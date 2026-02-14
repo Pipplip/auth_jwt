@@ -29,9 +29,10 @@ class SecurityConfig(
             }
             .authorizeHttpRequests { auth ->
                 auth
-//                    .requestMatchers("/auth/**").permitAll()  // Register/Login öffentlich
-                    .requestMatchers("/auth/register").permitAll()  // Register/Login öffentlich
-                    .requestMatchers("/auth/login").permitAll()  // Register/Login öffentlich
+//                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/auth/register").permitAll()  // Register/Login/Refresh öffentlich
+                    .requestMatchers("/auth/login").permitAll()
+                    .requestMatchers("/auth/refresh").permitAll()
                     // H2-Konsole nur freigeben, wenn Dev-Profil aktiv
                     .requestMatchers("/h2-console/**").let {
                         if (env.acceptsProfiles(Profiles.of("dev"))) it.permitAll() else it.denyAll()

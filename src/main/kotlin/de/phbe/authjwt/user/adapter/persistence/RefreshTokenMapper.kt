@@ -10,13 +10,17 @@ class RefreshTokenMapper {
         RefreshTokenJpaEntity(
             token = domain.token,
             userId = domain.userId.value,
-            expiresAt = domain.expiresAt
+            expiresAt = domain.expiresAt,
+            invalidated = domain.invalidated,
+            invalidatedAt = domain.invalidatedAt
         )
 
     fun toDomain(entity: RefreshTokenJpaEntity): RefreshToken =
         RefreshToken(
             token = entity.token,
             userId = UserId(entity.userId),
-            expiresAt = entity.expiresAt
+            expiresAt = entity.expiresAt,
+            invalidated = entity.invalidated,
+            invalidatedAt = entity.invalidatedAt
         )
 }

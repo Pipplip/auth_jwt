@@ -13,5 +13,10 @@ class RefreshTokenJpaEntity(
     val token: String,
 
     val userId: UUID,
-    val expiresAt: Instant
+
+    val expiresAt: Instant,
+
+    val invalidated: Boolean = false,
+
+    val invalidatedAt: Instant? = null
 )

@@ -6,6 +6,7 @@ import de.phbe.authjwt.user.domain.exception.InvalidRefreshTokenException
 import de.phbe.authjwt.user.domain.exception.RefreshTokenExpiredException
 import de.phbe.authjwt.user.domain.model.RefreshToken
 import de.phbe.authjwt.user.domain.repository.RefreshTokenRepository
+import de.phbe.authjwt.user.security.RefreshTokenHasher
 import de.phbe.authjwt.user.web.dto.AuthTokens
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,7 +18,8 @@ class AuthService(
     private val userService: UserService,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val jwtProperties: JwtProperties
+    private val jwtProperties: JwtProperties,
+    private val refreshTokenHasher: RefreshTokenHasher
 ) {
 
     @Transactional
@@ -26,14 +28,17 @@ class AuthService(
 
         val accessToken = jwtTokenProvider.createAccessToken(user)
         val refreshToken = UUID.randomUUID().toString()
+//        val refreshToken = refreshTokenHasher.hash(UUID.randomUUID().toString())
 
-        refreshTokenRepository.deleteAllByUserId(user.id.value)
+        // Refresh Token auf invalid setzen oder löschen
+//        refreshTokenRepository.deleteAllByUserId(user.id.value)
+        refreshTokenRepository.invalidateAllByUserId(user.id.value)
 
         refreshTokenRepository.save(
             RefreshToken(
                 token = refreshToken,
                 userId = user.id,
-                expiresAt = Instant.now().plusSeconds(jwtProperties.expirationRefresh)
+                expiresAt = Instant.now().plusMillis(jwtProperties.expirationRefresh)
             )
         )
 
@@ -49,12 +54,13 @@ class AuthService(
 
         val accessToken = jwtTokenProvider.createAccessToken(user)
         val refreshToken = UUID.randomUUID().toString()
+//        val refreshToken = refreshTokenHasher.hash(UUID.randomUUID().toString())
 
         refreshTokenRepository.save(
             RefreshToken(
                 token = refreshToken,
                 userId = user.id,
-                expiresAt = Instant.now().plusSeconds(jwtProperties.expirationRefresh)
+                expiresAt = Instant.now().plusMillis(jwtProperties.expirationRefresh)
             )
         )
 
@@ -68,22 +74,32 @@ class AuthService(
         val stored = refreshTokenRepository.findByToken(refreshToken)
             ?: throw InvalidRefreshTokenException()
 
-        if (stored.expiresAt.isBefore(Instant.now())) {
-            refreshTokenRepository.delete(refreshToken)
+        // Replay Angriff verhindern
+        if (stored.invalidated) {
+            // High Security Variante:
+            refreshTokenRepository.invalidateAllByUserId(stored.userId.value)
+            throw InvalidRefreshTokenException()
+        }
+
+        if (stored.isExpired()) {
+//            refreshTokenRepository.delete(refreshToken)
+            refreshTokenRepository.invalidate(refreshToken)
             throw RefreshTokenExpiredException()
         }
 
         val user = userService.findById(stored.userId)
 
         // Optional & empfohlen: Rotation
-        refreshTokenRepository.delete(refreshToken)
+//        refreshTokenRepository.delete(refreshToken)
+        refreshTokenRepository.invalidate(refreshToken)
 
         val newRefreshToken = UUID.randomUUID().toString()
+//        val newRefreshToken = refreshTokenHasher.hash(UUID.randomUUID().toString())
         refreshTokenRepository.save(
             RefreshToken(
                 token = newRefreshToken,
                 userId = user.id,
-                expiresAt = Instant.now().plusSeconds(jwtProperties.expirationRefresh)
+                expiresAt = Instant.now().plusMillis(jwtProperties.expirationRefresh)
             )
         )
 
@@ -96,6 +112,7 @@ class AuthService(
     }
 
     fun invalidateRefreshToken(refreshToken: String) {
-        refreshTokenRepository.delete(refreshToken)
+//        refreshTokenRepository.delete(refreshToken)
+        refreshTokenRepository.invalidate(refreshToken)
     }
 }

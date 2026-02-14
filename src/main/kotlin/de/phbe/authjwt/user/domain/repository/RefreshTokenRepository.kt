@@ -8,4 +8,6 @@ interface RefreshTokenRepository {
     fun findByToken(token: String): RefreshToken?
     fun delete(token: String)
     fun deleteAllByUserId(userId: UUID)
+    fun invalidate(token: String)
+    fun invalidateAllByUserId(userId: UUID)
 }

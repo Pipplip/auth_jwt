@@ -1,6 +1,7 @@
 package de.phbe.authjwt.exception
 
 import de.phbe.authjwt.user.domain.exception.InvalidCredentialsException
+import de.phbe.authjwt.user.domain.exception.InvalidRefreshTokenException
 import de.phbe.authjwt.user.domain.exception.UnauthorizedException
 import de.phbe.authjwt.user.domain.exception.UserAlreadyExistsException
 import de.phbe.authjwt.user.domain.exception.UserNotFoundException
@@ -40,6 +41,10 @@ class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException::class)
     fun handleUnauthorized(ex: UnauthorizedException) =
         buildResponse(ex.message, HttpStatus.UNAUTHORIZED)
+
+    @ExceptionHandler(InvalidRefreshTokenException::class)
+    fun handleUnauthorized(ex: InvalidRefreshTokenException) =
+        buildResponse(ex.message, HttpStatus.CONFLICT)
 
     @ExceptionHandler(Exception::class)
     fun handleGenericException(

@@ -64,10 +64,10 @@ class UserService(
     fun deleteUser(userToDelete: User, currentUser: User) {
         // nur admins dürfen löschen
         // und man darf sich nicht selbst löschen (sonst könnte man sich aus dem System aussperren)
-        if (currentUser.id != userToDelete.id && currentUser.userRole != UserRole.ADMIN) {
+        // println("deleting user ${currentUser.id} - ${userToDelete.id}  - role ${userToDelete.userRole}")
+        if (currentUser.id == userToDelete.id && currentUser.userRole != UserRole.ADMIN) {
             throw UnauthorizedException()
         }
-
         userRepository.delete(userToDelete)
     }
 }

@@ -18,6 +18,7 @@ Springdoc OpenAPI (Swagger)
 1. Flyway DB Migration hinzufügen
 2. Swagger UI anpassen (z.B. Titel, Beschreibung, API-Gruppierung)
 3. Dockerfile erstellen für MySQL und die Spring Boot App
+4. Use refreshToken hash for Database entry
 
 ## Ausführung
 
