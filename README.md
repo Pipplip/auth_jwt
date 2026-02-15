@@ -15,9 +15,8 @@ Springdoc OpenAPI (Swagger)
 
 ## ToDo
 
-1. Flyway DB Migration hinzufügen
-2. Swagger UI anpassen (z.B. Titel, Beschreibung, API-Gruppierung)
-3. Dockerfile erstellen für MySQL und die Spring Boot App
+1. Swagger UI anpassen (z.B. Titel, Beschreibung, API-Gruppierung)
+2. Dockerfile erstellen für MySQL und die Spring Boot App
 
 ## Ausführung
 
