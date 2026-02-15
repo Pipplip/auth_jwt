@@ -51,8 +51,10 @@ dependencies {
     runtimeOnly(libs.jjwt.jackson)
 
     // Flyway - DB Migration
-    implementation(libs.spring.boot.starter.jdbc)
-    implementation(libs.flyway.core)
+    // implementation(libs.flyway.core)
+    implementation(libs.spring.boot.starter.flyway)
+    implementation(libs.spring.boot.starter.flyway.mysql)
+    testImplementation(libs.spring.boot.starter.flyway.test)
 
     // Database - MySQL
     runtimeOnly(libs.mysql.connector)
