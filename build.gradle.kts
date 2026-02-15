@@ -80,8 +80,6 @@ kotlin {
 }
 
 tasks.test {
-    systemProperty("kotest.framework.config.fqn", "cloud.wowgroup.testengine.KotestProjectConfig")
-
     finalizedBy(tasks.koverLog, tasks.koverXmlReport)
 
     useJUnitPlatform()
