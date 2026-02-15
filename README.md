@@ -40,6 +40,24 @@ Möglichkeiten, um die Umgebung auszuwählen:
 **Info:** RefreshTokens werden nicht als HttpOnly-Cookies gesetzt. Stattdessen werden sie im Response Body zurückgegeben.
 Dies ist einfacher zu testen. Implementierung ist aber vorhanden und kann im AuthController angepasst werden.
 
+## FLyway
+
+Flyway ist eine Art Versionsverwaltung von DB Schemas.
+
+Stelle in allen Umgebungen auf:
+spring.jpa.hibernate.ddl-auto=validate
+
+Damit Flyway allein verantwortlich für das Schema ist.
+
+Was tun? 
+- Flyway aktivieren (properties): spring.flyway.enabled=true
+- Initiale Migration erzeugen.
+- setze dafür in den properties spring.jpa.hibernate.ddl-auto=create
+- Hibernate erzeugt alle Tabellen
+- SQL aus der DB exportieren
+- SQL als erste Migration speichern /db/migration/V1__init_schema.sql
+- spring.jpa.hibernate.ddl-auto=validate setzen
+
 ## Endpoints
 
 | Endpoint         | Methode  | Body                                  | Header                                  | Beispiel                                                  |
