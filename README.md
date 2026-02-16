@@ -8,14 +8,13 @@ Spring Boot Starter
 - Spring Security
 - Validation
 - MySQL Driver
-- Flyway DB Migration
-
-Springdoc OpenAPI (Swagger)
+- Flyway DB Migration 
+- Validation
+- Springdoc OpenAPI (Swagger)(ext. lib)
 
 ## ToDo
 
 1. Dockerfile erstellen für MySQL und die Spring Boot App
-2. Bean Validation hinzufügen (z.B. für Email und Passwort)
 
 ## Ausführung
 
@@ -54,21 +53,31 @@ Alternativ: http://localhost:8080/swagger-ui.html
 
 http://localhost:8080/v3/api-docs
 
+Wenn man Token im Header eines Requests braucht, muss man dies in der OpenApiConfig.kt konfigurieren
+und mit @SecurityRequirement am Endpoint angeben.
+
+## Bean validation
+
+Validation gehören in die Contoller und die Input Request-DTOs von den Controllern, z.B. LoginRequest.kt
+Schlüsselwörter: `@field:` und `@Valid`
+
+
 ## FLyway
 
 Flyway ist eine Art Versionsverwaltung von DB Schemas.
+Struktur ist V1__name.sql (großes V mit aufsteigender Version und doppelter Unterstrich).
 
 Stelle in allen Umgebungen auf:
 spring.jpa.hibernate.ddl-auto=validate
 
 Damit Flyway allein verantwortlich für das Schema ist.
 
-Was tun? 
+Was tun um Flyway zu verwenden? 
 - Flyway aktivieren (properties): spring.flyway.enabled=true
-- Initiale Migration erzeugen.
+- Initiale Migration erzeugen:
 - setze dafür in den properties spring.jpa.hibernate.ddl-auto=create
 - Hibernate erzeugt alle Tabellen
-- SQL aus der DB exportieren
+- SQL aus der DB exportieren (als sql-Datei)
 - SQL als erste Migration speichern /db/migration/V1__init_schema.sql
 - spring.jpa.hibernate.ddl-auto=validate setzen
 

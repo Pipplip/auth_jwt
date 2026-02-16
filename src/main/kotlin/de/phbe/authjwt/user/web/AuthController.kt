@@ -7,6 +7,7 @@ import de.phbe.authjwt.user.web.dto.RefreshRequest
 import de.phbe.authjwt.user.web.dto.RegisterRequest
 import de.phbe.authjwt.user.web.dto.UserResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
@@ -19,7 +20,7 @@ class AuthController(
 ) {
 
     @PostMapping("/register")
-    fun register(@RequestBody request: RegisterRequest): ResponseEntity<AuthTokens> {
+    fun register(@Valid @RequestBody request: RegisterRequest): ResponseEntity<AuthTokens> {
         val tokens = authService.register(request.email, request.password)
 
         // Access Token und Refresh Token im Body zurückgeben
@@ -33,7 +34,7 @@ class AuthController(
 
     // Zweck: Login / Tokens-Ausgabe
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthTokens> {
+    fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<AuthTokens> {
         val tokens = authService.login(request.email, request.password)
 
         return ResponseEntity.ok(
@@ -45,7 +46,7 @@ class AuthController(
     }
 
     @PostMapping("/refresh")
-    fun refresh(@RequestBody request: RefreshRequest): ResponseEntity<AuthTokens> {
+    fun refresh(@Valid @RequestBody request: RefreshRequest): ResponseEntity<AuthTokens> {
         val tokens = authService.refresh(request.refreshToken)
 
         return ResponseEntity.ok(

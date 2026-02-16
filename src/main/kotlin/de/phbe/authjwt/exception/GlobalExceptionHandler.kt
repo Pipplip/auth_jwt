@@ -8,6 +8,7 @@ import de.phbe.authjwt.user.domain.exception.UserNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.time.LocalDateTime
@@ -45,6 +46,11 @@ class GlobalExceptionHandler {
     @ExceptionHandler(InvalidRefreshTokenException::class)
     fun handleUnauthorized(ex: InvalidRefreshTokenException) =
         buildResponse(ex.message, HttpStatus.CONFLICT)
+
+    // Bean Validation exceptions
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidation(ex: MethodArgumentNotValidException) =
+        buildResponse(ex.message, HttpStatus.BAD_REQUEST)
 
     @ExceptionHandler(Exception::class)
     fun handleGenericException(
