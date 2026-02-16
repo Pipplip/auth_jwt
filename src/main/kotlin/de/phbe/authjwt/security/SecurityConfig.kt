@@ -19,27 +19,36 @@ class SecurityConfig(
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        val isDev = env.acceptsProfiles(Profiles.of("dev"))
+
         http
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .headers { header ->
-                if(env.acceptsProfiles(Profiles.of("dev"))) {
+                if(isDev) {
                     header.frameOptions { it.disable() }
                 }
             }
             .authorizeHttpRequests { auth ->
-                auth
-//                    .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/auth/register").permitAll()  // Register/Login/Refresh öffentlich
-                    .requestMatchers("/auth/login").permitAll()
-                    .requestMatchers("/auth/refresh").permitAll()
-                    // H2-Konsole nur freigeben, wenn Dev-Profil aktiv
-                    .requestMatchers("/h2-console/**").let {
-                        if (env.acceptsProfiles(Profiles.of("dev"))) it.permitAll() else it.denyAll()
-                    }
-                    .anyRequest().authenticated()             // alles andere geschützt
-            }
+                auth.requestMatchers(
+                        //"/auth/**"
+                        "/auth/register",
+                        "/auth/login",
+                        "/auth/refresh"
+                    ).permitAll()
 
+                    if(isDev) {
+                        auth.requestMatchers(
+                            "/h2-console/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/v3/api-docs/**"
+                        ).permitAll()
+                    }
+
+                auth.anyRequest().authenticated()             // alles andere geschützt
+
+            }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()

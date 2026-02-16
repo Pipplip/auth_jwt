@@ -6,6 +6,7 @@ import de.phbe.authjwt.user.web.dto.LoginRequest
 import de.phbe.authjwt.user.web.dto.RefreshRequest
 import de.phbe.authjwt.user.web.dto.RegisterRequest
 import de.phbe.authjwt.user.web.dto.UserResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
@@ -56,6 +57,7 @@ class AuthController(
     }
 
     // Ohne Cookies würde der Client das Refresh Token im Body senden, z.B. im Authorization Header oder als JSON Payload
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/logout")
     fun logout(@RequestBody request: RefreshRequest): ResponseEntity<Void> {
         authService.invalidateRefreshToken(request.refreshToken)

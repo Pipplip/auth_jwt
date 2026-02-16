@@ -14,8 +14,8 @@ Springdoc OpenAPI (Swagger)
 
 ## ToDo
 
-1. Swagger UI anpassen (z.B. Titel, Beschreibung, API-Gruppierung)
-2. Dockerfile erstellen für MySQL und die Spring Boot App
+1. Dockerfile erstellen für MySQL und die Spring Boot App
+2. Bean Validation hinzufügen (z.B. für Email und Passwort)
 
 ## Ausführung
 
@@ -45,6 +45,14 @@ Möglichkeiten, um die Umgebung auszuwählen:
 
 **Info:** RefreshTokens werden nicht als HttpOnly-Cookies gesetzt. Stattdessen werden sie im Response Body zurückgegeben.
 Dies ist einfacher zu testen. Implementierung ist aber vorhanden und kann im AuthController angepasst werden.
+
+## Swagger (nur in DEV aktiviert, s. securityFilterChain)
+
+http://localhost:8080/swagger-ui/index.html
+
+Alternativ: http://localhost:8080/swagger-ui.html
+
+http://localhost:8080/v3/api-docs
 
 ## FLyway
 

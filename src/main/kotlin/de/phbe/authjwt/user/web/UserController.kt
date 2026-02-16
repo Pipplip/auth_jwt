@@ -6,6 +6,7 @@ import de.phbe.authjwt.user.web.dto.UserResponse
 import de.phbe.authjwt.user.adapter.persistence.UserMapper
 import de.phbe.authjwt.user.domain.exception.UnauthorizedException
 import de.phbe.authjwt.user.domain.model.User
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -16,6 +17,7 @@ class UserController(
     private val userService: UserService
 ) {
     // DELETE: http://localhost:8080/users/ff16ce76-c8ea-4808-b146-e94cadeccfb2
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{id}")
     fun deleteUser(@PathVariable id: UUID) {
         val currentUser = getCurrentUserFromSecurityContext()
@@ -24,6 +26,7 @@ class UserController(
     }
 
     // GET: http://localhost:8080/users/profile
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/profile")
     fun getProfile(): UserResponse {
         val user = getCurrentUserFromSecurityContext()
