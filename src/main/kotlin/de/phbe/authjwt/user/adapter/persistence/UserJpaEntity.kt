@@ -14,7 +14,7 @@ import java.util.UUID
 @Table(name = "users")
 data class UserJpaEntity(
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, columnDefinition = "BINARY(16)")
     val id: UUID,
 
     @Column(name = "email", nullable = false, unique = true)

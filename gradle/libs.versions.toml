@@ -35,7 +35,6 @@ spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-star
 spring-boot-starter-flyway = { module = "org.springframework.boot:spring-boot-starter-flyway", version.ref = "spring-boot" }
 spring-boot-starter-flyway-test = { module = "org.springframework.boot:spring-boot-starter-flyway-test", version.ref = "spring-boot" }
 spring-boot-starter-flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway" }
-
 #flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
@@ -43,6 +42,7 @@ jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 h2-db = { module = "com.h2database:h2", version.ref = "h2" }
+spring-boot-h2-console = {module = "org.springframework.boot:spring-boot-h2console", version.ref = "spring-boot" }
 
 mysql-connector = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
 springdoc-openapi-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }

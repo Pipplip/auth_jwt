@@ -1,5 +1,6 @@
 package de.phbe.authjwt.user.adapter.persistence
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import jakarta.persistence.Id
@@ -12,6 +13,7 @@ class RefreshTokenJpaEntity(
     @Id
     val token: String,
 
+    @Column(columnDefinition = "BINARY(16)")
     val userId: UUID,
 
     val expiresAt: Instant,

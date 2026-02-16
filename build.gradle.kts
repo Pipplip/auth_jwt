@@ -60,7 +60,8 @@ dependencies {
     runtimeOnly(libs.mysql.connector)
 
     // H2 Database für test, dev environment
-    implementation(libs.h2.db)
+    runtimeOnly(libs.h2.db)
+    implementation(libs.spring.boot.h2.console)
 
     // Swagger
     implementation(libs.springdoc.openapi.ui)

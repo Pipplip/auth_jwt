@@ -8,8 +8,7 @@ Spring Boot Starter
 - Spring Security
 - Validation
 - MySQL Driver
-
-Flyway DB Migration
+- Flyway DB Migration
 
 Springdoc OpenAPI (Swagger)
 
@@ -20,11 +19,19 @@ Springdoc OpenAPI (Swagger)
 
 ## Ausführung
 
+PROD:
 1. MySQL Server starten. Hört auf Port 3333 (kann in `application.properties` angepasst werden)
 2. Datenbank `userdb` anlegen
 3. Projekt starten (z.B. über IDE oder `./gradlew bootRun`) - http://localhost:8080
 4. Swagger UI: http://localhost:8080/swagger-ui.html
 5. API testen mit API tools oder eine client-app bauen: z.B. Registrierung, Login, Token-Refresh
+
+DEV:
+In DEV Umgebung ist die H2 In-Memory DB aktiviert. Es ist keine MySQL Installation nötig.
+```
+Console: http://localhost:8080/h2-console
+URL: jdbc:h2:mem:userdb
+```
 
 ## Umgebung auswählen
 

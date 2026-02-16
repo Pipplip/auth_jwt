@@ -5,7 +5,7 @@ CREATE TABLE `refresh_tokens` (
   `user_id` binary(16) DEFAULT NULL,
   `token` varchar(255) NOT NULL,
   PRIMARY KEY (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 
 CREATE TABLE `users` (
   `registered_at` datetime(6) NOT NULL,
@@ -15,4 +15,4 @@ CREATE TABLE `users` (
   `user_role` enum('ADMIN','USER') DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT uk_users_email UNIQUE (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
