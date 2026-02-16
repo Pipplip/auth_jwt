@@ -21,7 +21,8 @@ data class ErrorResponse(
     val status: Int,
     val error: String,
     val message: String?,
-    val path: String?
+    val path: String?,
+    val validationErrors: Map<String, String>? = null
 )
 
 @ControllerAdvice
@@ -47,10 +48,22 @@ class GlobalExceptionHandler {
     fun handleUnauthorized(ex: InvalidRefreshTokenException) =
         buildResponse(ex.message, HttpStatus.CONFLICT)
 
-    // Bean Validation exceptions
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleValidation(ex: MethodArgumentNotValidException) =
-        buildResponse(ex.message, HttpStatus.BAD_REQUEST)
+    fun handleValidation(ex: MethodArgumentNotValidException, request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> {
+        val fieldErrors = ex.bindingResult.fieldErrors
+            .associate { it.field to (it.defaultMessage ?: "Invalid value") }
+
+        val error = ErrorResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = HttpStatus.BAD_REQUEST.reasonPhrase,
+            message = "Validation failed",
+            path = request.requestURI,
+            validationErrors = fieldErrors
+        )
+
+        return ResponseEntity(error, HttpStatus.BAD_REQUEST)
+    }
 
     @ExceptionHandler(Exception::class)
     fun handleGenericException(
