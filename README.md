@@ -15,7 +15,7 @@ Spring Boot Starter
 
 ## ToDo
 
-1. Dockerfile beheben
+--
 
 ## Ausführung
 
