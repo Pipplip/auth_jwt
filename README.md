@@ -10,6 +10,7 @@ Spring Boot Starter
 - MySQL Driver
 - Flyway DB Migration 
 - Validation
+- Actuator
 - Springdoc OpenAPI (Swagger)(ext. lib)
 
 ## ToDo
@@ -55,6 +56,16 @@ http://localhost:8080/v3/api-docs
 
 Wenn man Token im Header eines Requests braucht, muss man dies in der OpenApiConfig.kt konfigurieren
 und mit @SecurityRequirement am Endpoint angeben.
+
+## Actuator
+
+Nur in DEV aktiviert, s. Properties und securityFilterChain
+
+http://localhost:8080/actuator
+http://localhost:8080/actuator/health
+http://localhost:8080/actuator/info
+http://localhost:8080/actuator/env
+http://localhost:8080/actuator/beans
 
 ## Bean validation
 
