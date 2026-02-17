@@ -15,7 +15,7 @@ Spring Boot Starter
 
 ## ToDo
 
-1. Dockerfile erstellen für MySQL und die Spring Boot App
+1. Dockerfile beheben
 
 ## Ausführung
 
@@ -45,6 +45,18 @@ Möglichkeiten, um die Umgebung auszuwählen:
 
 **Info:** RefreshTokens werden nicht als HttpOnly-Cookies gesetzt. Stattdessen werden sie im Response Body zurückgegeben.
 Dies ist einfacher zu testen. Implementierung ist aber vorhanden und kann im AuthController angepasst werden.
+
+## Docker
+
+.env = environment variables (FAKE PASSWORDS!!!)
+Wurde commited als Beispiel. In Realität wäre .env in .gitignore
+
+Dockerfile = Anweisung um Docker-Image zu bauen (Bau eines einzelnen Containers)
+docker-compose.yml = Konfigurationsdatei, um mehrere Container gleichzeitig zu definieren und starten.
+.dockerignore= enthält Dateien/Dirs, die beim Bauen eines Images ignoriert werden sollen
+
+Image bauen:
+`docker compose up --build`
 
 ## Swagger (nur in DEV aktiviert, s. securityFilterChain)
 
