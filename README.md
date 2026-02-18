@@ -17,12 +17,16 @@ Spring Boot Starter
 
 --
 
-## Ausführung
+## Info
+RefreshTokens werden nicht als HttpOnly-Cookies gesetzt. Stattdessen werden sie im Response Body zurückgegeben.
+Dies ist einfacher zu testen. Implementierung ist aber vorhanden und kann im AuthController angepasst werden.
+
+## Ausführung lokal
 
 PROD:
-1. MySQL Server starten. Hört auf Port 3333 (kann in `application.properties` angepasst werden)
-2. Datenbank `userdb` anlegen
-3. Projekt starten (z.B. über IDE oder `./gradlew bootRun`) - http://localhost:8080
+1. MySQL Server starten. Hört auf Port 3333 (kann in `application-prod.properties` bzw. `.env` angepasst werden)
+2. (Datenbank `userdb` anlegen) -> sollte flyway automatisch machen, wenn die DB Verbindung stimmt
+3. Projekt starten (z.B. über IDE (in Intellij noch die environmental variables angeben (.env) und das active profile auswählen) oder `./gradlew bootRun`) - http://localhost:8080
 4. Swagger UI: http://localhost:8080/swagger-ui.html
 5. API testen mit API tools oder eine client-app bauen: z.B. Registrierung, Login, Token-Refresh
 
@@ -33,18 +37,23 @@ Console: http://localhost:8080/h2-console
 URL: jdbc:h2:mem:userdb
 ```
 
+**Gradle build:**
+`./gradlew build` - baut das Projekt, führt Tests aus und erzeugt eine jar-Datei im build/libs Ordner
+In der application-test.properties sollten keine .env Variablen verwendet werden. Nehme dort einfach dummy Werte.
+
+
 ## Umgebung auswählen
 
 Drei Umgebungen sind angelegt: DEV, TEST, PROD. (`application-dev.properties`, `application-test.properties`, `application-prod.properties`)
+
+`application.properties` enthält allgemeine Konfigurationen, die für alle Umgebungen gelten. In den spezifischen Properties-Dateien (dev, test, prod) können dann umgebungsspezifische Einstellungen überschrieben werden.
 
 Möglichkeiten, um die Umgebung auszuwählen:
 1. In `application.properties` die Zeile `spring.profiles.active=dev` hinzufügen
 2. Über die JVM-Option `-Dspring.profiles.active=dev` beim Starten der App
 3. Über die Gradle-Option `-Dspring-boot.run.profiles=dev` beim Ausführen von `./gradlew bootRun`
 4. Umgebungsvariable anlegen `export SPRING_PROFILES_ACTIVE=dev`
-
-**Info:** RefreshTokens werden nicht als HttpOnly-Cookies gesetzt. Stattdessen werden sie im Response Body zurückgegeben.
-Dies ist einfacher zu testen. Implementierung ist aber vorhanden und kann im AuthController angepasst werden.
+5. In Intellij: active profile in den Run/Debug Configurations auswählen
 
 ## Docker
 
@@ -83,7 +92,6 @@ http://localhost:8080/actuator/beans
 
 Validation gehören in die Contoller und die Input Request-DTOs von den Controllern, z.B. LoginRequest.kt
 Schlüsselwörter: `@field:` und `@Valid`
-
 
 ## FLyway
 

@@ -123,3 +123,7 @@ allOpen {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.withType<Test>().configureEach {
+    systemProperty("spring.profiles.active", "test")
+}
