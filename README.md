@@ -64,8 +64,19 @@ Dockerfile = Anweisung um Docker-Image zu bauen (Bau eines einzelnen Containers)
 docker-compose.yml = Konfigurationsdatei, um mehrere Container gleichzeitig zu definieren und starten.
 .dockerignore= enthält Dateien/Dirs, die beim Bauen eines Images ignoriert werden sollen
 
-Image bauen:
-`docker compose up --build`
+Docker Befehle für compose (in root ausführen, wo die docker-compose.yml liegt):
+Docker Desktop starten!!
+- `docker compose up --build` Images neu bauen und starten
+- `docker compose up` Nur starten, ohne neu zu bauen
+- `docker compose stop` Alle Container stoppen (bleiben erhalten)
+- `docker compose down` Alle Container stoppen und entfernen
+- `docker compose down -v` Mit volumes löschen (Daten gehen verloren!)
+- `docker compose pull` Aktuelle Images aktualisieren
+- `docker compose logs` Logs aller Container anzeigen
+- `docker compose logs -f` Logs in Echtzeit verfolgen
+- `docker compose ps` Status aller Container anzeigen
+- `docker image prune` Alle ungenutzten Images löschen
+- `docker componse exec <container_name> bash` In einen laufenden Container wechseln (z.B. um die DB zu inspizieren)
 
 ## Swagger (nur in DEV aktiviert, s. securityFilterChain)
 
