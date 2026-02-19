@@ -1,5 +1,5 @@
 # auth_jwt
-Einfache Userverwaltung: Auth mit JWT (Access/Refresh-Token) in Kotlin und SpringBoot
+Einfache Userverwaltung: Eigene Implementierung eines Auth mit JWT (Access/Refresh-Token) in Kotlin und SpringBoot
 
 ___
 ## Dependencies
@@ -15,10 +15,6 @@ ___
 >- spring-boot-h2console (H2 DB für interne tests)
 >- io.jsonwebtoken:jjwt (ext. lib)
 >- Springdoc OpenAPI (Swagger) (ext. lib)
-
-## ToDo
-
---
 
 ## Info
 RefreshTokens werden nicht als HttpOnly-Cookies gesetzt. Stattdessen werden sie im Response Body zurückgegeben.  
